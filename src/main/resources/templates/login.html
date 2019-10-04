@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!--    http://localhost:8080/pm/login.html-->
+    <meta charset="utf-8"/>
+    <title>登录</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link href="css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="layui/css/layui.css" rel="stylesheet"/>
+    <link href="css/beyond.min.css" rel="stylesheet"/>
+    <link rel="shortcut icon" href="https://www.easyicon.net/download/ico/1181656/128/"/>
+</head>
+<body>
+<div class="login-container animated fadeInDown">
+    <div class="loginbox bg-white">
+        <div class="loginbox-title">工资核算绩效管理系统</div>
+        <div class="loginbox-or">
+            <div class="or-line"></div>
+        </div>
+        <div class="loginbox-textbox">
+            <input type="text" class="form-control" id="username" placeholder="账号"/>
+        </div>
+        <div class="loginbox-textbox">
+            <input type="password" class="form-control" id="pass" placeholder="密码"/>
+        </div>
+        <div class="loginbox-submit">
+            <input type="button" class="btn btn-primary btn-block" id="login" value="登录">
+        </div>
+    </div>
+</div>
+<script src="js/jquery.min.js"></script>
+<script src="layui/layui.all.js"></script>
+<script src="js/beyond.min.js"></script>
+<script src="js/toastr.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/login.js"></script>
+<script type="text/javascript">
+    $(function () {
+        $("#username").focus();
+        /** 按了回车键 */
+        $(document).keydown(function (event) {
+            if (event.keyCode === 13) {
+                $("#login").trigger("click");
+            }
+        });
+
+        /** 给登录按钮绑定点击事件  */
+        $("#login").on("click", function () {
+            /** 校验登录参数 ctrl+K */
+            var username = $("#username").val();
+            var password = $("#pass").val();
+
+            $.ajax({
+                url: "login",
+                type: "get",
+                data: {
+                    loginName: username.trim(),
+                    password: password.trim()
+                },
+                error: function (res) {
+                    $.MsgBox.Alert("消息", "出错了，请与管理员联系");
+                },
+                success: function (res) {
+                    console.log(res);
+                    if (res === "SUCCESS") {
+                        window.location.replace("main.html");
+                    } else {
+                        $.MsgBox.Alert("消息", "用户名或密码错误");
+                    }
+                }
+            });
+        })
+    });
+</script>
+</body>
+</html>
