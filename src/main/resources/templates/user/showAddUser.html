@@ -39,8 +39,46 @@
 	type="text/javascript"></script>
 <link href="../css/pager.css" type="text/css" rel="stylesheet" />
 
+<style type="text/css">
+	.content{
+		width:100%;
+		height:90%;
+		border:0;
+		background-color: white;
+		margin-top: 10px;
+	}
+	.input-content{
+		text-align: left;
+		padding: 30px 60px
+	}
+	.input-content p{
+		font-size: 14px;
+		font-family: '思源黑体 CN Bold';
+		color: #333;
+		padding-bottom: 10px;
+		padding-top: 20px;
+	}
+	.input-content input{
+		width:350px;
+		height:36px;
+		border: 1px solid #cecece;
+		border-radius: 4px;
+		padding-left: 10px;
+	}
+	.button{
+		width:350px;
+		height:36px;
+		border: 0;
+		background-color: #2B7FDE;
+		border-radius: 4px;
+		color: #fff;
+	}
 
-<script type="text/javascript">
+
+
+</style>
+
+	<script type="text/javascript">
 	/** 员工表单提交 */
 	$(document).ready(
 			function() {
@@ -97,7 +135,7 @@
 			});
 </script>
 </head>
-<body class="layout-fixed">
+<body class="layout-fixed"  style="background: #f3f7fc;">
 	<!--<script language="JavaScript">-->
 	<!--			var context="/hrm",__contextPath="/hrm",__extendOptions="main/options";-->
 	<!--		</script>-->
@@ -106,66 +144,20 @@
 			<td height="10"></td>
 		</tr>
 		<tr>
-			<td width="15" height="32"><img src="../images/main_locleft.gif"
-				width="15" height="32"></td>
-			<td class="main_locbg font2"><img src="../images/pointer.gif">&nbsp;&nbsp;&nbsp;当前位置：用户管理
-				&gt; 添加用户</td>
-			<td width="15" height="32"><img
-				src="../images/main_locright.gif" width="15" height="32"></td>
+			<td width="15" height="36" style="background:#fff"></td>
+			<td class="main_locbg font2" style="background:#fff; font-size: 14px"><img src="../images/address.png">&nbsp;当前位置：用户管理
+				&gt; 修改密码</td>
+			<td width="15" height="36" style="background:#fff"></td>
 		</tr>
 	</table>
-	<table width="100%" height="90%" border="0" cellpadding="5"
-		cellspacing="0" class="main_tabbor">
-		<tr valign="top">
-			<td>
-				<!-- 隐藏表单，flag表示添加标记 --> <input type="hidden" name="flag" value="2">
-				<table width="100%" border="0" cellpadding="0" cellspacing="10"
-					class="main_tab">
-					<tr>
-						<td class="font3 fftd">
-							<table>
-								<tr>
-									<td class="font3 fftd">姓&nbsp;名：<input type="text"
-										name="username" id="username" size="20" /></td>
-
-
-									<td class="font3 fftd">状&nbsp;态： <select name="status"
-										id="status">
-											<option value="1">管理员</option>
-											<option value="2">普通用户</option>
-
-									</select>
-									</td>
-								</tr>
-
-								<tr>
-									<td class="font3 fftd">登录名：<input name="loginname"
-										id="loginname" size="20" /></td>
-									<td class="font3 fftd">密&nbsp;码：<input name="password"
-										id="password" size="20" /></td>
-
-								</tr>
-
-							</table>
-						</td>
-					</tr>
-					<tr>
-						<td class="main_tdbor"></td>
-					</tr>
-
-					<tr>
-						<td align="left" class="fftd"><input type="button"
-							id="submit" value="添加">&nbsp;&nbsp; <input type="button"
-							id="cancel" value="取消 ">&nbsp;&nbsp;</td>
-
-
-
-					</tr>
-				</table>
-
-			</td>
-		</tr>
-	</table>
+	<div class="content" >
+		<div class="input-content">
+			<p>原密码：</p><input type="text" name="oldPassword"/>
+			<p>新密码：</p><input type="text" name="newPassword"/>
+			<p>确认密码：</p><input type="text" name="confirmPassword"/>
+			<p></p><input type="submit" value="确认修改" class="button"/>
+		</div>
+	</div>
 	<div style="height: 10px;"></div>
 
 
