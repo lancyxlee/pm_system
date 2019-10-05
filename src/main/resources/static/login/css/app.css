@@ -239,7 +239,7 @@ Component: layout-animation.less
 /* ========================================================================
 Component: top-navbar.less
 ========================================================================== */
-.topnavbar {position:fixed;top:0px;width:100%;background-color: #35404D; z-index: 1050;    /* fixes chrome jump */ margin-bottom: 0; border: 0; border-bottom: 1px solid rgba(0, 0, 0, .15); border-radius: 0; background-color: #35404D; -webkit-backface-visibility: hidden; }
+.topnavbar {position:fixed;top:0px;width:100%;background-color: #FFFFFF; z-index: 1050;    /* fixes chrome jump */ margin-bottom: 0; border: 0; border-bottom: 1px solid rgba(0, 0, 0, .15); border-radius: 0; background-color: #FFFFFF; -webkit-backface-visibility: hidden; }
 @media only screen and (min-width:768px) {
 .topnavbar .navbar-header { width: 200px; text-align: center; }
 .topnavbar .navbar-header .navbar-brand { width: 100%; }
@@ -281,7 +281,7 @@ Component: top-navbar.less
 .topnavbar .navbar-form { left: 220px; }
 }
 @media only screen and (min-width:768px) {
-.topnavbar { border: 0; background-color: #35404D; }
+.topnavbar { border: 0; background-color: #FFFFFF; }
 .topnavbar .navbar-header { background-image: none; background-repeat: no-repeat; filter: none; }
 .topnavbar .navbar-nav > a { -webkit-transition: all .2s; -o-transition: all .2s; transition: all .2s; box-shadow: 0 0 0 #000 inset; }
 .topnavbar .navbar-nav > .open > a, .topnavbar .navbar-nav > .open > a:hover, .topnavbar .navbar-nav > .open > a:focus { -webkit-transition: all .2s; -o-transition: all .2s; transition: all .2s; box-shadow: 0 -3px 0 #19a5d1 inset; }

@@ -12,7 +12,7 @@ body,
    Component: top-navbar
  ========================================================================== */
 .topnavbar {
-  background-color: #35404D;
+  background-color: #FFFFFF;
 }
 .topnavbar .navbar-header {
   background-color: transparent;
@@ -58,7 +58,7 @@ body,
     position:fixed;
     top:0px;
     width:100%;
-    background-color: #35404D;
+    background-color: #FFFFFF;
     background-repeat: repeat-x;
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff2c3e50', endColorstr='#ff2c3e50', GradientType=1);
   }
@@ -81,7 +81,7 @@ body,
   
   
   .topnavbar .nav-wrapper {
-  background-color: #35404D;
+  background-color: #FFFFFF;
   display: inline-block;
   float:right;
   margin-right:10px;
@@ -117,7 +117,7 @@ body,
 /* } */
 .sidebar .nav .menu-item:hover{
 	 color: #ffffff; 
-	 background-color: #138078;
+	 background-color: #22BCF5;
 }
 .sidebar .nav > li > a > em,
 .sidebar .nav > li > .nav-item > em {
@@ -129,7 +129,7 @@ body,
 .sidebar .nav > li.open > a,
 .sidebar .nav > li.active .nav,
 .sidebar .nav > li.open .nav {
-  background-color:#3BC5BB;
+  background-color:#2B7FDE;
   color: #ffffff;
 }
 .sidebar .nav > li.active > a > em,
@@ -142,7 +142,7 @@ body,
 }
 */
 .sidebar-subnav {
-  background-color:#35404D;
+  background-color:#FFFFFF;
 }
 .sidebar-subnav > .sidebar-subnav-header {
   color: #ffffff;

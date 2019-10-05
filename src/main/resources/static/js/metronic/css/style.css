@@ -2,7 +2,7 @@
 /*@import url( http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700 );*/
 
 body {
-	margin: 0px !important; padding: 0px !important; color: rgb(0, 0, 0); font-family: "΢���ź�"; font-size: 12px;
+	margin: 0px !important; padding: 0px !important; color: rgb(0, 0, 0); font-family: "΢���ź�"; font-size: 12px;
 }
 h3 small {
 	color: rgb(68, 68, 68);
@@ -299,10 +299,10 @@ hr {
 	top: 8px; width: 8px; height: 25px; right: 0px; float: right; display: block; position: absolute; background-image: url("../img/sidebar-menu-arrow.png");
 }
 .page-sidebar ul > li > a > .arrow::before {
-	height: auto; font-family: FontAwesome; font-size: 16px; font-weight: 300; margin-top: 1px; margin-right: 5px; float: right; display: inline; content: "\f104"; text-shadow: none;
+	height: auto; font-family: "思源黑体 CN Bold"; font-size: 16px; font-weight: 300; margin-top: 1px; margin-right: 5px; float: right; display: inline; content: "\f104"; text-shadow: none;
 }
 .page-sidebar > ul > li > a > .open.arrow::before {
-	height: auto; font-family: FontAwesome; font-size: 16px; font-weight: 300; margin-top: 1px; margin-right: 3px; float: right; display: inline; content: "\f107"; text-shadow: none;
+	height: auto; font-family: "思源黑体 CN Bold"; font-size: 16px; font-weight: 300; margin-top: 1px; margin-right: 3px; float: right; display: inline; content: "\f107"; text-shadow: none;
 }
 .page-sidebar > ul > li > ul.sub-menu {
 	list-style: none; margin: 8px 0px; clear: both; display: none;
@@ -320,10 +320,10 @@ hr {
 	list-style: none; margin: 0px; clear: both; display: none;
 }
 .page-sidebar > ul > li > ul.sub-menu li > a > .arrow::before {
-	height: auto; font-family: FontAwesome; font-size: 16px; font-weight: 300; margin-top: 1px; margin-right: 20px; float: right; display: inline; content: "\f104"; text-shadow: none;
+	height: auto; font-family: "思源黑体 CN Bold"; font-size: 16px; font-weight: 300; margin-top: 1px; margin-right: 20px; float: right; display: inline; content: "\f104"; text-shadow: none;
 }
 .page-sidebar > ul > li > ul.sub-menu li > a > .open.arrow::before {
-	height: auto; font-family: FontAwesome; font-size: 16px; font-weight: 300; margin-top: 1px; margin-right: 18px; float: right; display: inline; content: "\f107"; text-shadow: none;
+	height: auto; font-family: "思源黑体 CN Bold"; font-size: 16px; font-weight: 300; margin-top: 1px; margin-right: 18px; float: right; display: inline; content: "\f107"; text-shadow: none;
 }
 .page-sidebar > ul > li.active > ul.sub-menu > li.active ul.sub-menu {
 	display: block;

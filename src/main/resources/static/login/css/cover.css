@@ -19,10 +19,10 @@
 	font-weight: bolder;
 }
 .sidebar > .nav > li > ul.sidebar-subnav >li.menu-item:hover{
-	    background-color: #465566;
+	    background-color: #22BCF5;
 }
 .sidebar > .nav > li > ul.sidebar-subnav >li.active{
-	    background-color: #3bc5bb;
+	    background-color: #2B7FDE;
 }
 
 .formitem .login-icon{

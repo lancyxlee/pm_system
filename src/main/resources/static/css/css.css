@@ -50,7 +50,7 @@ line-height:0;
 .font1 { color:#1f324d; font-size:14px; font-weight:bold; text-indent:3.5em; margin-top:5px;}
 .font2 { color:#1f324d; font-size:12px; font-family:"宋体";}
 .font3 { color:#1262b3; font-size:12px;}
-.left_nav_top { background:url(../images/left_nav_top.gif) no-repeat; width:200px; height:30px;}
+.left_nav_top { background:url(../images/left_nav_top.gif) no-repeat; width:200px; height:30px;margin-top: 20px;}
 .left_nav_closed { background:url(../images/left_nav_closed.gif) no-repeat; width:200px; height:30px; cursor:pointer;}
 .left_nav_expand { background:url(../images/left_nav_expand.gif) no-repeat; width:200px; height:30px; cursor:pointer;}
 .left_nav_bg { background:url(../images/left_nav_bg.gif) repeat-y;}
