@@ -6,13 +6,13 @@ package edu.cqut.pm_system.entity;
  * @date 2019/10/04
  */
 public class User {
-    String uid;
-    String username;
-    String password;
+    private String uid;
+    private String username;
+    private String password;
     /**
      * 角色（0：管理员1：部门经理2：普通员工）
      */
-    Integer role;
+    private Integer role;
 
     public User() {
     }

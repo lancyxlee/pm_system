@@ -49,7 +49,8 @@ line-height:0;
 
 .font1 { color:#1f324d; font-size:14px; font-weight:bold; text-indent:3.5em; margin-top:5px;}
 .font2 { color:#1f324d; font-size:12px; font-family:"宋体";}
-.font3 { color:#1262b3; font-size:12px;}
+/*搜索区域字体*/
+.font3 { color:#333333; font-size:16px;font-family: "Microsoft YaHei"}
 .left_nav_top { background:url(../images/left_nav_top.gif) no-repeat; width:200px; height:30px;margin-top: 20px;}
 .left_nav_closed { background:url(../images/left_nav_closed.gif) no-repeat; width:200px; height:30px; cursor:pointer;}
 .left_nav_expand { background:url(../images/left_nav_expand.gif) no-repeat; width:200px; height:30px; cursor:pointer;}
@@ -60,13 +61,19 @@ line-height:0;
 .left_nav_link a:hover { font-size:14px; color:#1262b3; text-decoration:underline;}
 .tdbtmline { border-bottom:#a1bde5 1px solid;}
 
-.main_tabbor { border:#a1bde5 1px solid; border-top:none; background:#ffffff url(../images/main_bg.gif) top repeat-x;}
-.main_tab { background-color:#f5f7fa; border:#c2c6cc 1px solid;}
-.fftd { padding:10px;*padding:0px;}
+/*主要区域显示*/
+.main_tabbor { margin-top: 10px;border:0; background:#FFFFFF; padding: 0 30px 0 30px}
+/*搜索区域*/
+.main_tab { background-color:#FFFFFF; border:0;}
+/*搜索区域padding*/
+.fftd { padding: 20px 0 20px 0;}
+/*搜索框样式*/
+.search_bar { border-radius: 4px;width: 200px;height: 36px;font-size: 16px;border: 1px solid #cecece;font-family: "Microsoft YaHei";}
+.search_btn { border-radius: 4px;width: 80px;height: 36px;font-size: 16px;border: 0;color: #FFFFFF;font-family: "Microsoft YaHei"; }
 .main_locbg { background:url(../images/main_locbg.gif) repeat-x; height:32px; line-height:32px;}
 .main_locbg img { vertical-align:middle;}
 .main_tdbor { border-bottom:#c2c6cc 1px dashed;}
-.main_trbg_tit { background-color:#f5f7fa; color:#1f324d;}
+.main_trbg_tit { background-color:#FCFCFC; color:#333333; font-size: 16px; font-family: "Microsoft YaHei";height: 46px}
 tr.main_trbg_tit td { font-size:13px;font-weight:bold;}
 .main_trbg { background-color:#ffffff;}
 tr.main_trbg td { font-size:12px;}
