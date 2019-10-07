@@ -1,109 +1,94 @@
-
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<!DOCTYPE html>
 <html>
-	<head>
-	<title>人事管理系统——添加部门</title>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<meta http-equiv="pragma" content="no-cache" />
-	<meta http-equiv="cache-control" content="no-cache" />
-	<meta http-equiv="expires" content="0" />    
-	<meta http-equiv="keywords" content="keyword1,keyword2,keyword3" />
-	<meta http-equiv="description" content="This is my page" />
-	<link href="../css/css.css" type="text/css" rel="stylesheet" />
-	<link rel="stylesheet" type="text/css" href="../js/ligerUI/skins/Aqua/css/ligerui-dialog.css"/>
-	<link href="../js/ligerUI/skins/ligerui-icons.css" rel="stylesheet" type="text/css" />
-	<script type="text/javascript" src="../js/jquery-1.11.0.js"></script>
-    <script type="text/javascript" src="../js/jquery-migrate-1.2.1.js"></script>
-	<script src="../js/ligerUI/js/core/base.js" type="text/javascript"></script>
-	<script src="../js/ligerUI/js/plugins/ligerDrag.js" type="text/javascript"></script>
-	<script src="..//js/ligerUI/js/plugins/ligerDialog.js" type="text/javascript"></script>
-	<script src="../js/ligerUI/js/plugins/ligerResizable.js" type="text/javascript"></script>
-	<link href="../css/pager.css" type="text/css" rel="stylesheet" />
-	<script type="text/javascript">
-	 function submit(){
-	    	/** 部门表单提交 */
-			//$("#deptForm").submit(function(){
-				var name = $("#name");
-				var remark = $("#remark");
-				var msg = "";
-				if ($.trim(name.val()) == ""){
-					msg = "部门名称不能为空！";
-					name.focus();
-				}else if ($.trim(remark.val()) == ""){
-					msg = "详细描述不能为空！";
-					remark.focus();
-				}
-				
-				if (msg != ""){
-					$.ligerDialog.error(msg);
-					return false;
-				}else{$.ajax({
-					type:"post",
-					url:"../insertDept",
-					data:{
-						name:name.val(),
-						remake:remark.val(),
-					},
-					dataType:"json",
-					async:false,
-					success:function(data){
-						console.log(data);
-						if (data == "SUCCESS") {
-							$.ligerDialog.success("添加成功");
-	                    }else{
-	                    	$.ligerDialog.error("添加失败");
-	                    }
-					},
-					error: function (res) {
-                        $.ligerDialog.error("出错了，请与管理员联系！");
-                    },
-				})
-					return true;
-				}
-				
-	    }
-			
-		function cancel(){
-			window.location.href = 'dept.html';
+<head>
+	<meta charset="utf-8">
+	<title>工资核算绩效管理系统 ——部门信息管理</title>
+	<link href="../css/css.css" type="text/css" rel="stylesheet"/>
+	<link href="../layui/css/layui.css" rel="stylesheet" media="all">
+	<style type="text/css">
+		input::-webkit-input-placeholder{
+			color:#999999;
 		}
-
-		
-
-	</script>
+		.search_bar{
+			padding-left: 10px;
+			font-size: 14px;
+		}
+		.search_btn{
+			font-size: 14px;
+		}
+	</style>
 </head>
-<body>
-<table width="100%" border="0" cellpadding="0" cellspacing="0">
-  <tr><td height="10"></td></tr>
-  <tr>
-    <td width="15" height="32"><img src="../images/main_locleft.gif" width="15" height="32"></td>
-	<td class="main_locbg font2"><img src="../images/pointer.gif">&nbsp;&nbsp;&nbsp;当前位置：部门管理  &gt; 添加部门</td>
-	<td width="15" height="32"><img src="../images/main_locright.gif" width="15" height="32"></td>
-  </tr>
-</table>
-<table width="100%" height="90%" border="0" cellpadding="5" cellspacing="0" class="main_tabbor">
-  <tr valign="top">
-    <td>
-    	 
-    	 	<!-- 隐藏表单，flag表示添加标记 -->
-    	 	<input type="hidden" name="flag" value="2">
-		  <table width="100%" border="0" cellpadding="0" cellspacing="10" class="main_tab">
-		    <tr><td class="font3 fftd">
-		    	<table>
-		    		<tr>
-		    			<td class="font3 fftd">部门名称：<input type="text" name="name" id="name" size="20"/></td>
-		    			<td class="font3 fftd">详细描述：<input type="text" name="remark" id="remark" size="20"/></td>
-		    		</tr>
-		    			
-		    	</table>
-		    </td></tr>
-			<tr><td class="main_tdbor"></td></tr>
-			
-			<tr><td align="left" class="fftd"><input type="button" onclick="submit()" value="添加 ">&nbsp;&nbsp;<input type="button" onclick="cancel()"  value="取消 "></td></tr>
-		  </table>
-		 
-	</td>
-  </tr>
-</table>
-<div style="height:10px;"></div>
+<body style="width: 100%; background: #F3F7FC;">
+<!-- 导航 -->
+<div style="width: 100%; height: 36px; margin-top: 10px;">
+	<div class="main_locbg font2" style="background:#fff; font-size: 14px; text-align: left; padding: 0 30px 0 30px"><img src="../images/address.png" alt="">&nbsp;当前位置：人事管理&gt; 部门信息管理</div>
+</div>
+<div class="main_tabbor">
+	<!--搜索区域-->
+	<div style="text-align: left; padding: 20px 30px 0 30px">
+		部门编号：<input type="text" class="search_bar" id="deptId" placeholder="请输入部门编号"  name="deptId" style="padding-left: 10px">
+		<span style="margin-left: 10px">部门名称：</span><input type="text" class="search_bar" id="dept" placeholder="请输入部门名称" name="dept" style="padding-left: 10px">
+		<input id="search" class="search_btn" style="background-color: #2B7FDE; margin-left: 15px" type="button" value="查询"/>
+		<input id="add" class="search_btn" style="background-color: #2B7FDE;float: right;" type="button" value="新增"/>
+		<input id="delete" class="search_btn" style="background-color: #DE2B2B;float: right; margin-right: 30px" type="button" value="删除"/>
+		<input id="update" class="search_btn" style="background-color: #2BAEDE;float: right; margin-right: 30px" type="button" value="编辑"/>
+	</div>
+	<!--表单区域-->
+	<div style="height: 4px; background-color: #2B7FDE; margin: 20px 30px -10px 30px;"></div>
+	<div style="margin: 0 30px 0 30px"><table id="dept_table" lay-filter="test"></table></div>
+	<div style="height: 15px; background-color: #FFFFFF; margin: 0 30px 0 30px"></div>
+</div>
+<script src="../js/jquery-3.4.1.js"></script>
+<script src="../layer/layer.js"></script>
+<script src="../layui/layui.js"></script>
+<script>
+	layui.use('table', function () {
+		var table = layui.table;
+		//第一个实例
+		table.render({
+			elem: '#dept_table'
+			, url: '/demo/table/user/' //数据接口
+			, height: 'full-180'
+			, page: true //开启分页
+			, cols: [[ //表头
+				{type: 'checkbox'}
+				, {field: 'id', title: '序号', sort: true, fixed: 'left'}
+				, {field: 'deptId', title: '部门编号', sort: true}
+				, {field: 'deptName', title: '部门名称'}
+				, {field: 'manager', title: '负责人'}
+				, {field: 'tel', title: '部门电话'}
+				, {fixed: 'right', title:'操作', align:'center', toolbar: '#barDemo'}
+			]]
+		});
+	});
+	$("#add").click(function(){
+		layer.ready(function(){
+			layer.open({
+				type: 2,
+				title: '新增',
+				shadeClose: true,
+				area: ['500px', '350px'],
+				content: 'dept_iframe.html?type=1',//type=1 新增操作
+				end: function(){
+					//layer.tips('Hi', '#about', {tips: 1})
+				}
+			});
+		});
+	});
+	$("#update").click(function(){
+		layer.ready(function(){
+			layer.open({
+				type: 2,
+				title: '编辑',
+				shadeClose: true,
+				area: ['500px', '350px'],
+				content: 'dept_iframe.html?type=2',//type=2 修改操作
+				end: function(){
+					//layer.tips('Hi', '#about', {tips: 1})
+				}
+			});
+		});
+	});
+</script>
 </body>
 </html>

@@ -64,6 +64,7 @@
 		border: 1px solid #cecece;
 		border-radius: 4px;
 		padding-left: 10px;
+		font-size: 14px;
 	}
 	.button{
 		width:350px;
@@ -73,7 +74,9 @@
 		border-radius: 4px;
 		color: #fff;
 	}
-
+	input::-webkit-input-placeholder{
+		color:#999999;
+	}
 
 
 </style>
@@ -152,9 +155,9 @@
 	</table>
 	<div class="content" >
 		<div class="input-content">
-			<p>原密码：</p><input type="text" name="oldPassword"/>
-			<p>新密码：</p><input type="text" name="newPassword"/>
-			<p>确认密码：</p><input type="text" name="confirmPassword"/>
+			<p>原密码：</p><input type="text" placeholder="请输入原密码" name="oldPassword"/>
+			<p>新密码：</p><input type="text" placeholder="请输入新密码" name="newPassword"/>
+			<p>确认密码：</p><input type="text" placeholder="请输入确认密码" name="confirmPassword"/>
 			<p></p><input type="submit" value="确认修改" class="button"/>
 		</div>
 	</div>

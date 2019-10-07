@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>部门信息管理弹出页</title>
+    <link href="../layui/css/layui.css" rel="stylesheet" media="all">
+    <link href="../css/theme.css" rel="stylesheet">
+</head>
+<body style="padding: 30px 50px 30px 30px">
+<form class="layui-form" action="">
+    <div class="layui-form-item">
+        <label class="layui-form-label">部门编号</label>
+        <div class="layui-input-block">
+            <input type="text" name="title" required lay-verify="required" placeholder="请输入部门编号"
+                   autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">部门名称</label>
+        <div class="layui-input-block">
+            <input type="text" name="title" required lay-verify="required" placeholder="请输入部门名称"
+                   autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">负责人</label>
+        <div class="layui-input-block">
+            <input type="text" name="title" required lay-verify="required" placeholder="请输入负责人"
+                   autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">部门电话</label>
+        <div class="layui-input-block">
+            <input type="text" name="title" required lay-verify="required" placeholder="请输入部门电话"
+                   autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit lay-filter="formDemo">提交</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+    </div>
+</form>
+<script src="../js/jquery-3.4.1.js"></script>
+<script src="../layer/layer.js"></script>
+<script src="../layui/layui.js"></script>
+<script>
+    $(function(){
+        var url = location.search; //这一条语句获取了包括问号开始到参数的最后，不包括前面的路径
+        var params = url.substr(1);//去掉问号
+        var pa = params.split("&");
+        var s = {};
+        for(var i = 0; i < pa.length; i ++){
+            s[pa[i].split("=")[0]] = unescape(pa[i].split("=")[1]);
+        }
+        var type = s.type;
+        if (type === 1) {
+            console.log(type);
+        } else {
+            console.log(type);
+        }
+    });
+
+    layui.use('form', function () {
+        var form = layui.form;
+        //监听提交
+        form.on('submit(formDemo)', function (data) {
+            layer.msg(JSON.stringify(data.field));
+            return false;
+        });
+    });
+    layui.use('laydate', function(){
+        var laydate = layui.laydate;
+        //执行一个laydate实例
+        laydate.render({
+            elem: '#entry_time' //指定元素
+            ,theme: '#2B7FDE'
+            ,trigger: 'click'
+        });
+    });
+</script>
+</body>
+</html>
