@@ -1,6 +1,6 @@
 package edu.cqut.pm_system.entity;
 
-import java.util.Date;
+import java.sql.Timestamp;
 
 /**
  * 员工类
@@ -18,14 +18,14 @@ public class Employee {
     private Integer sex;
     private String idnum;
     private String telnum;
-    private Date startdate;
+    private Timestamp startdate;
     private String deptnum;
 
     public Employee() {
     }
 
     public Employee(String uid, String uempid, String uempname, Integer age, Integer sex,
-                    String idnum, String telnum, Date startdate, String deptnum) {
+                    String idnum, String telnum, Timestamp startdate, String deptnum) {
         this.uid = uid;
         this.uempid = uempid;
         this.uempname = uempname;
@@ -93,11 +93,11 @@ public class Employee {
         this.telnum = telnum;
     }
 
-    public Date getStartdate() {
+    public Timestamp getStartdate() {
         return startdate;
     }
 
-    public void setStartdate(Date startdate) {
+    public void setStartdate(Timestamp startdate) {
         this.startdate = startdate;
     }
 

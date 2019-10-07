@@ -16,6 +16,7 @@ import edu.cqut.pm_system.util.JacksonUtil;
 
 /**
  * 登录界面Controller层
+ *
  * @author llx
  * @date 2019/09/28
  */
@@ -37,7 +38,7 @@ public class LoginController {
         }
     }
 
-//    @RequestMapping(value = "loginOut", method = RequestMethod.POST)
+    //    @RequestMapping(value = "loginOut", method = RequestMethod.POST)
 //    public String loginOut(HttpServletRequest request) {
 //        try {
 //            Enumeration em = request.getSession().getAttributeNames();
@@ -50,10 +51,10 @@ public class LoginController {
 //        }
 //    }
 //
-@RequestMapping(value = "getPermission", method = RequestMethod.GET)
-public String getPermission(HttpSession session) {
-    return JacksonUtil.objectToJson(session.getAttribute("status"));
-}
+    @RequestMapping(value = "getPermission", method = RequestMethod.GET)
+    public String getPermission(HttpSession session) {
+        return JacksonUtil.objectToJson(session.getAttribute("status"));
+    }
 
     @RequestMapping(value = "getUsername", method = RequestMethod.GET)
     public String getUsername(HttpSession session) {

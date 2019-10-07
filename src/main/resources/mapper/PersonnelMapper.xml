@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.cqut.pm_system.dao.PersonnelDao">
+	<!--设置domain类和数据库中表的字段一一对应，注意数据库字段和domain类中的字段名称不致，此处一定要！-->
+	<resultMap id="EmployeeMap" type="edu.cqut.pm_system.entity.Employee">
+		<id column="uid" property="uid" jdbcType="VARCHAR" />
+		<result column="uempid" property="uempid" jdbcType="VARCHAR" />
+		<result column="uempname" property="uempname" jdbcType="VARCHAR" />
+		<result column="age" property="age" jdbcType="INTEGER" />
+		<result column="sex" property="sex" jdbcType="INTEGER" />
+		<result column="idnum" property="idnum" jdbcType="VARCHAR" />
+		<result column="telnum" property="telnum" jdbcType="VARCHAR" />
+		<result column="startdate" property="startdate" jdbcType="TIMESTAMP" />
+		<result column="deptnum" property="deptnum" jdbcType="VARCHAR" />
+	</resultMap>
+	<resultMap id="DeptMap" type="edu.cqut.pm_system.entity.Dept">
+		<id column="did" property="did" jdbcType="VARCHAR" />
+		<result column="deptname" property="deptname" jdbcType="VARCHAR" />
+		<result column="deptnum" property="deptnum" jdbcType="VARCHAR" />
+		<result column="tel" property="tel" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<select id="getAllEmployee" resultMap="EmployeeMap">
+		SELECT
+			employee.uid,
+			employee.uempid,
+			employee.uempname,
+			employee.age,
+			employee.sex,
+			employee.idnum,
+			employee.telnum,
+			employee.startdate,
+			employee.deptnum
+		FROM
+			employee
+    </select>
+	<select id="getAllDept" resultMap="DeptMap">
+		SELECT
+			dept.did,
+			dept.deptname,
+			dept.deptnum,
+			dept.tel
+		FROM
+			dept
+	</select>
+	<insert id="addEmployee" parameterType="edu.cqut.pm_system.entity.Employee">
+        INSERT INTO employee
+        VALUES
+	    (#{uid, jdbcType=VARCHAR}, #{uempid, jdbcType=VARCHAR}, #{uempname, jdbcType=VARCHAR}, #{age, jdbcType=INTEGER}, #{sex, jdbcType=INTEGER}, #{idnum, jdbcType=VARCHAR}, #{telnum, jdbcType=VARCHAR}, #{startdate, jdbcType=TIMESTAMP}, #{deptnum, jdbcType=VARCHAR})
+    </insert>
+</mapper>
