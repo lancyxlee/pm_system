@@ -28,7 +28,7 @@
     <!--搜索区域-->
     <div style="text-align: left; padding: 20px 30px 0 30px">
         员工工号：<input type="text" class="search_bar" id="jobId" placeholder="请输入员工工号" name="jobId">
-        <span style="margin-left: 10px">部门名称：</span><input type="text" class="search_bar" id="dept" placeholder="请输入部门名称" name="dept">
+        <span style="margin-left: 10px">部门名称：</span><input type="text" class="search_bar" id="deptName" placeholder="请输入部门名称" name="deptName">
         <input id="search" class="search_btn" style="background-color: #2B7FDE; margin-left: 15px" type="button" value="查询"/>
         <input id="add" class="search_btn" style="background-color: #2B7FDE;float: right;" type="button" value="新增"/>
         <input id="delete" class="search_btn" style="background-color: #DE2B2B;float: right; margin-right: 30px" type="button" value="删除"/>
@@ -56,11 +56,10 @@
             , height: 'full-180'
             , page: {theme:'#2B7FDE'} //开启分页
             , parseData:function(res) {
-                console.log(res);
                 return {
                     "code": 0,
                     "msg": "",
-                    "count": 100,
+                    "count": res.length,
                     "data":res
                 }
             }
@@ -70,22 +69,61 @@
                 , {field: 'uempid', title: '员工工号', align: 'center'}
                 , {field: 'uempname', title: '员工姓名', align: 'center'}
                 , {field: 'age', title: '年龄', align: 'center'}
-                , {field: 'sex', title: '性别', align: 'center'}
+                , {field: 'sex', title: '性别', align: 'center', templet: function(row){if(row.sex === 0){return '男'} else { return '女'}}}
+                , {field: 'idnum', title: '身份证号码', align: 'center'}
+                , {field: 'telnum', title: '电话号码', align: 'center'}
                 , {field: 'deptnum', title: '部门名称', sort: true, align: 'center'}
-                , {field: 'startdate', title: '入职时间', sort: true, align: 'center', templet : "<div>{{layui.util.toDateString(d.ordertime, 'yyyy年MM月dd日')}}</div>"}
+                , {field: 'startdate', title: '入职时间', sort: true, align: 'center',
+                    templet :function (row){
+                        var time = new Date(row.startdate);
+                        var day = time.getDate();
+                        if (time.getDate() < 10)
+                            day = "0" + time.getDate();
+                        return time.getFullYear() + "-" + (time.getMonth() + 1) + "-" + day;
+                    }
+                }
                 , {fixed: 'right', title:'操作', toolbar: '#barDemo', align: 'center'}
             ]]
+        });
+        //以复选框事件为例
+        table.on('checkbox(test)', function(obj){
+            console.log(obj.checked); //当前是否选中状态
+            console.log(obj.data); //选中行的相关数据
+            console.log(obj.type); //如果触发的是全选，则为：all，如果触发的是单选，则为：one
         });
         //监听行工具事件
         table.on('tool(test)', function(obj){
             var data = obj.data;
-            //console.log(obj)
+            console.log(JSON.stringify(data));
             if(obj.event === 'del'){
                 //询问框
                 layer.confirm('是否确实删除？'
                     , {btn: ['确定','取消'], icon: 0
                 }, function(){
-                    layer.msg('删除成功', {icon: 1});
+                    $.ajax({
+                        type:"delete",
+                        url:"/pm/employee/deleteEmployee",
+                        data : {
+                            uempid : obj.data.uempid
+                        },
+                        datatype: "json",
+                        error: function(){
+                            //请求出错处理
+                            layer.alert('出错了，请与管理员联系！', {icon: 2});
+                        },
+                        success:function(res){
+                            if (res === "FAIL") {
+                                parent.layer.alert('删除失败', {icon: 2});
+                                layer.close(parent.layer.getFrameIndex(window.name));
+                            } else {
+                                layer.alert('删除成功', {icon: 1});
+                                layui.table.reload('staff_table', {
+                                    url: '/pm/employee/getAllEmployee'
+                                });
+                                layer.close(parent.layer.getFrameIndex(window.name));
+                            }
+                        }
+                    });
                 }, function(){
 
                 });
@@ -95,11 +133,9 @@
                         type: 2,
                         title: '编辑',
                         shadeClose: true,
-                        area: ['500px', '550px'],
-                        content: 'staff_iframe.html?type=2',//type=2 修改操作
-                        end: function(){
-                            //layer.tips('Hi', '#about', {tips: 1})
-                        }
+                        area: ['500px', '750px'],
+                        content: 'staff_iframe.html?type=2&uid=' + data.uempid
+                        //type=2 编辑操作
                     });
                 });
             }
@@ -111,12 +147,24 @@
                 type: 2,
                 title: '新增',
                 shadeClose: true,
-                area: ['500px', '550px'],
+                area: ['500px', '750px'],
                 content: 'staff_iframe.html?type=1',//type=1 新增操作
                 end: function(){
                     //layer.tips('Hi', '#about', {tips: 1})
                 }
             });
+        });
+    });
+    $("#search").click(function(){
+        var jobId = $("#jobId").val();
+        var deptName = $("#deptName").val();
+        console.log(jobId + "-----" + deptName);
+        layui.table.reload('staff_table', {
+            url: '/pm/employee/searchEmployee'
+            ,where: {
+                uempid: jobId
+                ,deptname: deptName
+            }
         });
     });
 </script>

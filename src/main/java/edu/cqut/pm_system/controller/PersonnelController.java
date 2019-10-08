@@ -19,9 +19,11 @@ import javax.servlet.http.HttpSession;
 
 import edu.cqut.pm_system.entity.Dept;
 import edu.cqut.pm_system.entity.Employee;
+import edu.cqut.pm_system.entity.User;
 import edu.cqut.pm_system.service.PersonnelService;
 import edu.cqut.pm_system.util.EntityIDFactory;
 import edu.cqut.pm_system.util.JacksonUtil;
+import edu.cqut.pm_system.util.MD5Util;
 
 /**
  * 登录界面Controller层
@@ -55,8 +57,73 @@ public class PersonnelController {
     }
 
     @RequestMapping(value = "addEmployee", method = RequestMethod.POST)
-    @ResponseBody
-    public String addEmployee(String uempname, Integer age, Integer sex, String idnum, String telnum, String startdate, String deptnum, HttpSession session) {
+    public String addEmployee(String uempname, Integer age, Integer sex, String idnum, String telnum, String startdate, String deptnum, String username, String password, Integer role) {
+        String id = EntityIDFactory.createId();
+        DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        format.setLenient(false);
+        Timestamp timestamp = null;
+        try {
+            timestamp = new Timestamp(format.parse(startdate).getTime());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        User user = new User();
+        user.setUid(id);
+        user.setUsername(username);
+        user.setPassword(MD5Util.getMD5_32(password));
+        user.setRole(role);
+        Employee employee = new Employee();
+        employee.setUid(id);
+        employee.setUempid(id);
+        employee.setUempname(uempname);
+        employee.setAge(age);
+        employee.setSex(sex);
+        employee.setIdnum(idnum);
+        employee.setTelnum(telnum);
+        employee.setStartdate(timestamp);
+        employee.setDeptnum(deptnum);
+        String result = personnelService.addEmployee(employee);
+        String result1 = personnelService.addUser(user);
+        if ("SUCCESS".equals(result) && "SUCCESS".equals(result1)) {
+            return JacksonUtil.objectToJson("SUCCESS");
+        } else {
+            return JacksonUtil.objectToJson("FAIL");
+        }
+    }
+
+    @RequestMapping(value = "deleteEmployee", method = RequestMethod.DELETE)
+    public String deleteEmployeeFromUempid(String uempid) {
+        String result = personnelService.deleteEmployeeFromUempid(uempid);
+        String result1 = personnelService.deleteUserFromUid(uempid);
+        if ("SUCCESS".equals(result) && "SUCCESS".equals(result1)) {
+            return JacksonUtil.objectToJson("SUCCESS");
+        } else {
+            return JacksonUtil.objectToJson("FAIL");
+        }
+    }
+
+    @RequestMapping(value = "searchEmployee", method = RequestMethod.GET)
+    public String searchEmployee(String uempid, String deptname) {
+        List<Employee> result = personnelService.searchEmployee(uempid, deptname);
+        if (result != null) {
+            return JacksonUtil.objectToJson(result);
+        } else {
+            return "FAIL";
+        }
+    }
+
+    @RequestMapping(value = "getEmployeeFromId", method = RequestMethod.GET)
+    public String getEmployeeFromId(String uempid) {
+        Employee result = personnelService.getEmployeeFromId(uempid);
+        if (result != null) {
+            return JacksonUtil.objectToJson(result);
+        } else {
+            return "FAIL";
+        }
+    }
+
+    @RequestMapping(value = "updateEmployee", method = RequestMethod.POST)
+    public String updateEmployee(String uempname, Integer age, Integer sex, String idnum, String telnum, String startdate, String deptnum, String uempid) {
         DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         format.setLenient(false);
         Timestamp timestamp = null;
@@ -66,8 +133,8 @@ public class PersonnelController {
             e.printStackTrace();
         }
         Employee employee = new Employee();
-        employee.setUid((String) session.getAttribute("loginId"));
-        employee.setUempid(EntityIDFactory.createId());
+        employee.setUid(uempid);
+        employee.setUempid(uempid);
         employee.setUempname(uempname);
         employee.setAge(age);
         employee.setSex(sex);
@@ -75,7 +142,7 @@ public class PersonnelController {
         employee.setTelnum(telnum);
         employee.setStartdate(timestamp);
         employee.setDeptnum(deptnum);
-        String result = personnelService.addEmployee(employee);
+        String result = personnelService.updateEmployee(employee);
         if ("SUCCESS".equals(result)) {
             return JacksonUtil.objectToJson("SUCCESS");
         } else {

@@ -47,4 +47,58 @@ public class PersonnelServiceImpl implements PersonnelService {
             return "FAIL";
         }
     }
+
+    @Override
+    public String addUser(User user) {
+        try {
+            personnelDao.addUser(user);
+            return "SUCCESS";
+        } catch (Exception e) {
+            System.out.println(e);
+            return "FAIL";
+        }
+    }
+
+    @Override
+    public String deleteEmployeeFromUempid(String uempid) {
+        try {
+            personnelDao.deleteEmployeeFromUempid(uempid);
+            return "SUCCESS";
+        } catch (Exception e) {
+            System.out.println(e);
+            return "FAIL";
+        }
+    }
+
+    @Override
+    public String deleteUserFromUid(String uid) {
+        try {
+            personnelDao.deleteUserFromUid(uid);
+            return "SUCCESS";
+        } catch (Exception e) {
+            System.out.println(e);
+            return "FAIL";
+        }
+    }
+
+    @Override
+    public List<Employee> searchEmployee(String uempid, String deptname) {
+        return personnelDao.searchEmployee(uempid, deptname);
+    }
+
+    @Override
+    public Employee getEmployeeFromId(String uempid) {
+        return personnelDao.getEmployeeFromId(uempid);
+    }
+
+    @Override
+    public String updateEmployee(Employee employee) {
+        try {
+            personnelDao.updateEmployee(employee);
+            return "SUCCESS";
+        } catch (Exception e) {
+            System.out.println(e);
+            return "FAIL";
+        }
+    }
 }
