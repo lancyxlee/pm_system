@@ -5,6 +5,7 @@ import org.apache.ibatis.annotations.Mapper;
 import java.util.List;
 
 import edu.cqut.pm_system.entity.Dept;
+import edu.cqut.pm_system.entity.DeptSalary;
 import edu.cqut.pm_system.entity.Employee;
 import edu.cqut.pm_system.entity.User;
 
@@ -13,7 +14,7 @@ import edu.cqut.pm_system.entity.User;
  * @date 2019/10/04
  */
 @Mapper
-public interface PersonnelDao {
+public interface DeptSalaryDao {
     List<Employee> getAllEmployee();
     List<Dept> getAllDept();
     void addEmployee(Employee employee);
@@ -24,8 +25,7 @@ public interface PersonnelDao {
     Employee getEmployeeFromId(String uempid);
     void updateEmployee(Employee employee);
     List<Dept> searchDept(String deptnum, String deptname);
-    void addDept(Dept dept);
-    void deleteDeptFromId(String did);
-    void updateDept(Dept dept);
-    Dept getDeptFromId(String did);
+
+    void addDeptSalary(DeptSalary deptSalary);
+    void deleteDeptFromId(String deptnum);
 }

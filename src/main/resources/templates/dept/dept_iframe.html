@@ -11,28 +11,21 @@
     <div class="layui-form-item">
         <label class="layui-form-label">部门编号</label>
         <div class="layui-input-block">
-            <input type="text" name="title" required lay-verify="required" placeholder="请输入部门编号"
+            <input type="text" name="deptnum" required lay-verify="required" placeholder="请输入部门编号"
                    autocomplete="off" class="layui-input">
         </div>
     </div>
     <div class="layui-form-item">
         <label class="layui-form-label">部门名称</label>
         <div class="layui-input-block">
-            <input type="text" name="title" required lay-verify="required" placeholder="请输入部门名称"
-                   autocomplete="off" class="layui-input">
-        </div>
-    </div>
-    <div class="layui-form-item">
-        <label class="layui-form-label">负责人</label>
-        <div class="layui-input-block">
-            <input type="text" name="title" required lay-verify="required" placeholder="请输入负责人"
+            <input type="text" name="deptname" required lay-verify="required" placeholder="请输入部门名称"
                    autocomplete="off" class="layui-input">
         </div>
     </div>
     <div class="layui-form-item">
         <label class="layui-form-label">部门电话</label>
         <div class="layui-input-block">
-            <input type="text" name="title" required lay-verify="required" placeholder="请输入部门电话"
+            <input type="text" name="tel" required lay-verify="required" placeholder="请输入部门电话"
                    autocomplete="off" class="layui-input">
         </div>
     </div>
@@ -47,37 +40,104 @@
 <script src="../layer/layer.js"></script>
 <script src="../layui/layui.js"></script>
 <script>
+    var type;
+    var id;
     $(function(){
+        parent.layer.iframeAuto(parent.layer.getFrameIndex(window.name));
         var url = location.search; //这一条语句获取了包括问号开始到参数的最后，不包括前面的路径
+        console.log(url);
         var params = url.substr(1);//去掉问号
         var pa = params.split("&");
         var s = {};
         for(var i = 0; i < pa.length; i ++){
             s[pa[i].split("=")[0]] = unescape(pa[i].split("=")[1]);
         }
-        var type = s.type;
-        if (type === 1) {
-            console.log(type);
-        } else {
-            console.log(type);
+        type = s.type + "";
+        id = s.did + "";
+        if (type === "2") {
+            $.ajax({
+                type: "get",
+                url: "/pm/employee/getDeptFromId",
+                data : {
+                    did : id
+                },
+                dataType: "json",
+                error: function () {
+                    layer.alert('出错了，请与管理员联系！', {icon: 2});
+                },
+                success: function (res) {
+                    console.log(res);
+                    $("input[name='deptnum']").attr('value',res.deptnum);
+                    $("input[name='deptname']").attr('value',res.deptname);
+                    $("input[name='tel']").attr('value',res.tel);
+                }
+            });
         }
     });
 
     layui.use('form', function () {
         var form = layui.form;
-        //监听提交
+        //提交按钮监听事件
         form.on('submit(formDemo)', function (data) {
-            layer.msg(JSON.stringify(data.field));
+            //新增操作
+            if (type === "1") {
+                $.ajax({
+                    type:"post",
+                    url:"/pm/employee/addDept",
+                    data : {
+                        deptnum : data.field.deptnum,
+                        deptname : data.field.deptname,
+                        tel : data.field.tel
+                    },
+                    datatype: "json",
+                    error: function(){
+                        //请求出错处理
+                        layer.alert('出错了，请与管理员联系！', {icon: 2});
+                    },
+                    success:function(res){
+                        if (res === "FAIL") {
+                            parent.layer.alert('新增失败', {icon: 2});
+                            parent.layer.close(parent.layer.getFrameIndex(window.name));
+                        } else {
+                            parent.layer.alert('新增成功', {icon: 1});
+                            parent.layui.table.reload('dept_table', {
+                                url: '/pm/employee/getAllDept'
+                            });
+                            parent.layer.close(parent.layer.getFrameIndex(window.name));
+                        }
+                    }
+                });
+            } else {
+                console.log(id);
+                $.ajax({
+                    type:"post",
+                    url:"/pm/employee/updateDept",
+                    data : {
+                        deptnum : data.field.deptnum,
+                        deptname : data.field.deptname,
+                        tel : data.field.tel,
+                        did : id
+                    },
+                    datatype: "json",
+                    error: function(){
+                        //请求出错处理
+                        layer.alert('出错了，请与管理员联系！', {icon: 2});
+                    },
+                    success:function(res){
+                        if (res === "FAIL") {
+                            parent.layer.alert('编辑失败', {icon: 2});
+                            parent.layer.close(parent.layer.getFrameIndex(window.name));
+                        } else {
+                            parent.layer.alert('编辑成功', {icon: 1});
+                            parent.layui.table.reload('dept_table', {
+                                url: '/pm/employee/getAllDept'
+                            });
+                            parent.layer.close(parent.layer.getFrameIndex(window.name));
+                        }
+                    }
+                });
+            }
             return false;
-        });
-    });
-    layui.use('laydate', function(){
-        var laydate = layui.laydate;
-        //执行一个laydate实例
-        laydate.render({
-            elem: '#entry_time' //指定元素
-            ,theme: '#2B7FDE'
-            ,trigger: 'click'
         });
     });
 </script>

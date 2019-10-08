@@ -149,4 +149,57 @@ public class PersonnelController {
             return JacksonUtil.objectToJson("FAIL");
         }
     }
+
+    @RequestMapping(value = "searchDept", method = RequestMethod.GET)
+    public String searchDept(String deptnum, String deptname) {
+        List<Dept> result = personnelService.searchDept(deptnum, deptname);
+        if (result != null) {
+            return JacksonUtil.objectToJson(result);
+        } else {
+            return "FAIL";
+        }
+    }
+
+    @RequestMapping(value = "addDept", method = RequestMethod.POST)
+    public String addDept(String deptnum, String deptname, String tel) {
+        String id = EntityIDFactory.createId();
+        Dept dept = new Dept(id, deptname, deptnum, tel);
+        String result = personnelService.addDept(dept);
+        if ("SUCCESS".equals(result)) {
+            return JacksonUtil.objectToJson("SUCCESS");
+        } else {
+            return JacksonUtil.objectToJson("FAIL");
+        }
+    }
+
+    @RequestMapping(value = "deleteDeptFromId", method = RequestMethod.DELETE)
+    public String deleteDeptFromId(String did) {
+        String result = personnelService.deleteDeptFromId(did);
+        if ("SUCCESS".equals(result)) {
+            return JacksonUtil.objectToJson("SUCCESS");
+        } else {
+            return JacksonUtil.objectToJson("FAIL");
+        }
+    }
+
+    @RequestMapping(value = "updateDept", method = RequestMethod.POST)
+    public String updateDept(String deptnum, String deptname, String tel, String did) {
+        Dept dept = new Dept(did, deptname, deptnum, tel);
+        String result = personnelService.updateDept(dept);
+        if ("SUCCESS".equals(result)) {
+            return JacksonUtil.objectToJson("SUCCESS");
+        } else {
+            return JacksonUtil.objectToJson("FAIL");
+        }
+    }
+
+    @RequestMapping(value = "getDeptFromId", method = RequestMethod.GET)
+    public String getDeptFromId(String did) {
+        Dept result = personnelService.getDeptFromId(did);
+        if (result != null) {
+            return JacksonUtil.objectToJson(result);
+        } else {
+            return "FAIL";
+        }
+    }
 }

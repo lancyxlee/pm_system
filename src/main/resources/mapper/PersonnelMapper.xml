@@ -131,4 +131,57 @@
 		WHERE
 			employee.uempid = #{uempid,jdbcType=VARCHAR}
     </update>
+
+	<select id="searchDept" resultMap="DeptMap">
+		SELECT
+			dept.did,
+			dept.deptname,
+			dept.deptnum,
+			dept.tel
+		FROM
+			dept
+		WHERE
+			1 = 1
+			<if test="deptnum != null and deptnum != ''">
+				AND dept.deptnum like CONCAT('%',#{deptnum},'%')
+			</if>
+			<if test="deptname != null and deptname != ''">
+				AND dept.deptname like CONCAT('%',#{deptname},'%')
+			</if>
+	</select>
+
+	<insert id="addDept" parameterType="edu.cqut.pm_system.entity.Dept">
+        INSERT INTO dept
+        VALUES
+	    (#{did, jdbcType=VARCHAR}, #{deptname, jdbcType=VARCHAR}, #{deptnum, jdbcType=VARCHAR}, #{tel, jdbcType=VARCHAR})
+    </insert>
+
+	<delete id="deleteDeptFromId">
+		DELETE
+		FROM
+			dept
+		WHERE
+			dept.did = #{did}
+	</delete>
+
+	<update id="updateDept"  parameterType="edu.cqut.pm_system.entity.Dept">
+		UPDATE dept
+		SET dept.deptname = #{deptname,jdbcType=VARCHAR},
+		 dept.deptnum = #{deptnum, jdbcType=VARCHAR},
+		 dept.tel = #{tel, jdbcType=VARCHAR}
+		WHERE
+			dept.did = #{did,jdbcType=VARCHAR}
+    </update>
+
+	<select id="getDeptFromId" resultMap="DeptMap">
+		SELECT
+			dept.did,
+			dept.deptname,
+			dept.deptnum,
+			dept.tel
+		FROM
+			dept
+		WHERE
+			dept.did = #{did}
+    </select>
 </mapper>

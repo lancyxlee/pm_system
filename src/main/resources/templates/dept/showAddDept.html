@@ -30,8 +30,6 @@
 		<span style="margin-left: 10px">部门名称：</span><input type="text" class="search_bar" id="dept" placeholder="请输入部门名称" name="dept" style="padding-left: 10px">
 		<input id="search" class="search_btn" style="background-color: #2B7FDE; margin-left: 15px" type="button" value="查询"/>
 		<input id="add" class="search_btn" style="background-color: #2B7FDE;float: right;" type="button" value="新增"/>
-		<input id="delete" class="search_btn" style="background-color: #DE2B2B;float: right; margin-right: 30px" type="button" value="删除"/>
-		<input id="update" class="search_btn" style="background-color: #2BAEDE;float: right; margin-right: 30px" type="button" value="编辑"/>
 	</div>
 	<!--表单区域-->
 	<div style="height: 4px; background-color: #2B7FDE; margin: 20px 30px -10px 30px;"></div>
@@ -41,24 +39,85 @@
 <script src="../js/jquery-3.4.1.js"></script>
 <script src="../layer/layer.js"></script>
 <script src="../layui/layui.js"></script>
+<script type="text/html" id="barDemo">
+	<a lay-event="edit" style="color: #2BAEDE; font-size: 14px">编辑</a>
+	<a lay-event="del" style="color: #DE2B2B; font-size: 14px">删除</a>
+</script>
 <script>
 	layui.use('table', function () {
 		var table = layui.table;
 		//第一个实例
 		table.render({
 			elem: '#dept_table'
-			, url: '/demo/table/user/' //数据接口
+			, url: '/pm/employee/getAllDept' //数据接口
 			, height: 'full-180'
-			, page: true //开启分页
+			, page: {theme:'#2B7FDE'} //开启分页
+			, parseData:function(res) {
+				return {
+					"code": 0,
+					"msg": "",
+					"count": res.length,
+					"data":res
+				}
+			}
 			, cols: [[ //表头
-				{type: 'checkbox'}
-				, {field: 'id', title: '序号', sort: true, fixed: 'left'}
-				, {field: 'deptId', title: '部门编号', sort: true}
-				, {field: 'deptName', title: '部门名称'}
-				, {field: 'manager', title: '负责人'}
-				, {field: 'tel', title: '部门电话'}
+				{type: 'numbers', title: '序号', align:'center', fixed: 'left'}
+				, {field: 'deptnum', align:'center', title: '部门编号', sort: true}
+				, {field: 'deptname', align:'center', title: '部门名称'}
+				, {field: 'tel', align:'center', title: '部门电话'}
 				, {fixed: 'right', title:'操作', align:'center', toolbar: '#barDemo'}
 			]]
+		});
+		//监听行工具事件
+		table.on('tool(test)', function(obj){
+			var data = obj.data;
+			// 操作栏-删除按钮事件
+			if(obj.event === 'del'){
+				//询问框
+				layer.confirm('是否确实删除？'
+						, {btn: ['确定','取消'], icon: 0
+						}, function(){
+							//确定按钮事件
+							$.ajax({
+								type:"delete",
+								url:"/pm/employee/deleteDeptFromId",
+								data : {
+									did : data.did
+								},
+								datatype: "json",
+								error: function(){
+									//请求出错处理
+									layer.alert('出错了，请与管理员联系！', {icon: 2});
+								},
+								success:function(res){
+									if (res === "FAIL") {
+										parent.layer.alert('删除失败', {icon: 2});
+										layer.close(parent.layer.getFrameIndex(window.name));
+									} else {
+										layer.alert('删除成功', {icon: 1});
+										layui.table.reload('dept_table', {
+											url: '/pm/employee/getAllDept'
+										});
+										layer.close(parent.layer.getFrameIndex(window.name));
+									}
+								}
+							});
+						}, function(){
+
+						});
+			} else if(obj.event === 'edit'){
+				//编辑按钮事件
+				layer.ready(function(){
+					layer.open({
+						type: 2,
+						title: '编辑',
+						shadeClose: true,
+						area: ['500px', '350px'],
+						content: 'dept_iframe.html?type=2&did=' + data.did
+						//type=2 编辑操作
+					});
+				});
+			}
 		});
 	});
 	$("#add").click(function(){
@@ -68,25 +127,20 @@
 				title: '新增',
 				shadeClose: true,
 				area: ['500px', '350px'],
-				content: 'dept_iframe.html?type=1',//type=1 新增操作
-				end: function(){
-					//layer.tips('Hi', '#about', {tips: 1})
-				}
+				content: 'dept_iframe.html?type=1'//type=1 新增操作
 			});
 		});
 	});
-	$("#update").click(function(){
-		layer.ready(function(){
-			layer.open({
-				type: 2,
-				title: '编辑',
-				shadeClose: true,
-				area: ['500px', '350px'],
-				content: 'dept_iframe.html?type=2',//type=2 修改操作
-				end: function(){
-					//layer.tips('Hi', '#about', {tips: 1})
-				}
-			});
+	// 查询按钮事件
+	$("#search").click(function(){
+		var deptnum = $("#deptId").val();
+		var deptname = $("#dept").val();
+		layui.table.reload('dept_table', {
+			url: '/pm/employee/searchDept'
+			,where: {
+				deptnum: deptnum
+				,deptname: deptname
+			}
 		});
 	});
 </script>

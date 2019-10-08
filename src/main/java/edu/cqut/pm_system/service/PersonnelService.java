@@ -21,4 +21,9 @@ public interface PersonnelService {
     List<Employee> searchEmployee(String uempid, String deptname);
     Employee getEmployeeFromId(String uempid);
     String updateEmployee(Employee employee);
+    List<Dept> searchDept(String deptnum, String deptname);
+    String addDept(Dept dept);
+    String deleteDeptFromId(String did);
+    String updateDept(Dept dept);
+    Dept getDeptFromId(String did);
 }
