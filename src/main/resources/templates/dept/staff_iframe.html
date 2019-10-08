@@ -30,9 +30,23 @@
         </div>
     </div>
     <div class="layui-form-item">
+        <label class="layui-form-label">身份证号码</label>
+        <div class="layui-input-block">
+            <input type="text" name="idnum" required lay-verify="required" placeholder="请输入身份证号码"
+                   autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">电话号码</label>
+        <div class="layui-input-block">
+            <input type="text" name="telnum" required lay-verify="required" placeholder="请输入电话号码"
+                   autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
         <label class="layui-form-label">部门名称</label>
         <div class="layui-input-block">
-            <select id="dept_list" name="dept" lay-verify="required">
+            <select id="dept_list" name="deptnum" lay-verify="required">
                 <option value=""></option>
             </select>
         </div>
@@ -41,6 +55,28 @@
         <label class="layui-form-label">入职时间</label>
         <div class="layui-inline">
             <input type="text" name="startdate" class="layui-input test-item" placeholder="请选择入职时间" id="entry_time">
+        </div>
+    </div>
+    <div id="username" class="layui-form-item">
+        <label class="layui-form-label">用户名</label>
+        <div class="layui-input-block">
+            <input type="text" name="username" required lay-verify="required" placeholder="请输入用户名"
+                   autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div id="password" class="layui-form-item">
+        <label class="layui-form-label">密码</label>
+        <div class="layui-input-block">
+            <input type="password" name="password" required lay-verify="required" placeholder="请输入密码"
+                   autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div id="role" class="layui-form-item">
+        <label class="layui-form-label">角色</label>
+        <div class="layui-input-block">
+            <input type="radio" name="role" value="0" title="管理员" checked>
+            <input type="radio" name="role" value="1" title="部门经理">
+            <input type="radio" name="role" value="2" title="普通员工">
         </div>
     </div>
     <div class="layui-form-item">
@@ -55,15 +91,18 @@
 <script src="../layui/layui.js"></script>
 <script>
     var type;
+    var id;
     $(function(){
         var url = location.search; //这一条语句获取了包括问号开始到参数的最后，不包括前面的路径
+        console.log(url);
         var params = url.substr(1);//去掉问号
         var pa = params.split("&");
         var s = {};
         for(var i = 0; i < pa.length; i ++){
             s[pa[i].split("=")[0]] = unescape(pa[i].split("=")[1]);
         }
-        type = s.type;
+        type = s.type + "";
+        id = s.uid + "";
         $.ajax({
             url: "/pm/employee/getAllDept",
             type: "get",
@@ -75,42 +114,120 @@
                 console.log(res);
                 $.each(res, function (index, item) {
                     $('#dept_list').append(new Option(item.deptname, item.did));// 下拉菜单里添加元素
-                    layui.form.render("select");
+                    layui.form.render('select');
                 });
             }
         });
+        if (type === "2") {
+            $.ajax({
+                type: "get",
+                url: "/pm/employee/getEmployeeFromId",
+                data : {
+                    uempid : id
+                },
+                dataType: "json",
+                error: function () {
+                    layer.alert('出错了，请与管理员联系！', {icon: 2});
+                },
+                success: function (res) {
+                    console.log(res);
+                    $("input[name='uempname']").attr('value',res.uempname);
+                    $("input[name='age']").attr('value',res.age);
+                    $("input:radio[name='sex'][value='" + res.sex + "']").attr('checked','true');
+                    $("input[name='idnum']").attr('value',res.idnum);
+                    $("input[name='telnum']").attr('value',res.telnum);
+                    console.log(document.getElementById("dept_list"));
+                    console.log(res.deptnum);
+                    //document.getElementById("dept_list").value = res.deptnum;
+                    //$("#dept_list").val(res.deptnum);
+                    var time = new Date(res.startdate);
+                    var day = time.getDate();
+                    if (time.getDate() < 10)
+                        day = "0" + time.getDate();
+                    var startdate = time.getFullYear() + "-" + (time.getMonth() + 1) + "-" + day;
+                    $("input[name='startdate']").attr('value', startdate);
+                    $("#username").remove();
+                    $("#password").remove();
+                    $("#role").remove();
+                    parent.layer.iframeAuto(parent.layer.getFrameIndex(window.name));
+                }
+            });
+        }
     });
 
     layui.use('form', function () {
         var form = layui.form;
         //监听提交
         form.on('submit(formDemo)', function (data) {
-            console.log(data.field.startdate);
-            $.ajax({
-                type:"post",
-                url:"/pm/employee/addEmployee",
-                data : {
-                    uempname : data.field.uempname,
-                    age : data.field.age,
-                    sex : data.field.sex,
-                    idnum : data.field.idnum,
-                    telnum : data.field.telnum,
-                    startdate : data.field.startdate,
-                    deptnum : data.field.deptnum
-                },
-                datatype: "json",
-                error: function(){
-                    //请求出错处理
-                    layer.alert('出错了，请与管理员联系！', {icon: 2});
-                },
-                success:function(res){
-                    if (res === "FAIL") {
-                        layer.alert('新增失败', {icon: 2});
-                    } else {
-                        layer.alert('新增成功', {icon: 1});
+            if (type === "1") {
+                $.ajax({
+                    type:"post",
+                    url:"/pm/employee/addEmployee",
+                    data : {
+                        uempname : data.field.uempname,
+                        age : data.field.age,
+                        sex : data.field.sex,
+                        idnum : data.field.idnum,
+                        telnum : data.field.telnum,
+                        startdate : data.field.startdate,
+                        deptnum : data.field.deptnum,
+                        username : data.field.username,
+                        password : data.field.password,
+                        role : data.field.role
+                    },
+                    datatype: "json",
+                    error: function(){
+                        //请求出错处理
+                        layer.alert('出错了，请与管理员联系！', {icon: 2});
+                    },
+                    success:function(res){
+                        if (res === "FAIL") {
+                            parent.layer.alert('新增失败', {icon: 2});
+                            parent.layer.close(parent.layer.getFrameIndex(window.name));
+                        } else {
+                            parent.layer.alert('新增成功', {icon: 1});
+                            parent.layui.table.reload('staff_table', {
+                                url: '/pm/employee/getAllEmployee'
+                            });
+                            parent.layer.close(parent.layer.getFrameIndex(window.name));
+
+                        }
                     }
-                }
-            });
+                });
+            } else {
+                $.ajax({
+                    type:"post",
+                    url:"/pm/employee/updateEmployee",
+                    data : {
+                        uempname : data.field.uempname,
+                        age : data.field.age,
+                        sex : data.field.sex,
+                        idnum : data.field.idnum,
+                        telnum : data.field.telnum,
+                        startdate : data.field.startdate,
+                        deptnum : data.field.deptnum,
+                        uempid : id
+                    },
+                    datatype: "json",
+                    error: function(){
+                        //请求出错处理
+                        layer.alert('出错了，请与管理员联系！', {icon: 2});
+                    },
+                    success:function(res){
+                        if (res === "FAIL") {
+                            parent.layer.alert('编辑失败', {icon: 2});
+                            parent.layer.close(parent.layer.getFrameIndex(window.name));
+                        } else {
+                            parent.layer.alert('编辑成功', {icon: 1});
+                            parent.layui.table.reload('staff_table', {
+                                url: '/pm/employee/getAllEmployee'
+                            });
+                            parent.layer.close(parent.layer.getFrameIndex(window.name));
+
+                        }
+                    }
+                });
+            }
             return false;
         });
     });

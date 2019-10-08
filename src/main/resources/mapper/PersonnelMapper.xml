@@ -31,10 +31,13 @@
 			employee.idnum,
 			employee.telnum,
 			employee.startdate,
-			employee.deptnum
+			dept.deptname deptnum
 		FROM
-			employee
+			employee, dept
+		WHERE
+			employee.deptnum = dept.did
     </select>
+
 	<select id="getAllDept" resultMap="DeptMap">
 		SELECT
 			dept.did,
@@ -44,9 +47,88 @@
 		FROM
 			dept
 	</select>
+
 	<insert id="addEmployee" parameterType="edu.cqut.pm_system.entity.Employee">
         INSERT INTO employee
         VALUES
 	    (#{uid, jdbcType=VARCHAR}, #{uempid, jdbcType=VARCHAR}, #{uempname, jdbcType=VARCHAR}, #{age, jdbcType=INTEGER}, #{sex, jdbcType=INTEGER}, #{idnum, jdbcType=VARCHAR}, #{telnum, jdbcType=VARCHAR}, #{startdate, jdbcType=TIMESTAMP}, #{deptnum, jdbcType=VARCHAR})
     </insert>
+
+	<insert id="addUser" parameterType="edu.cqut.pm_system.entity.User">
+        INSERT INTO user
+        VALUES
+	    (#{uid, jdbcType=VARCHAR}, #{username, jdbcType=VARCHAR}, #{password, jdbcType=VARCHAR}, #{role, jdbcType=INTEGER})
+    </insert>
+
+	<delete id="deleteEmployeeFromUempid">
+		DELETE
+		FROM
+			employee
+		WHERE
+			employee.uempid = #{uempid}
+	</delete>
+
+	<delete id="deleteUserFromUid">
+		DELETE
+		FROM
+			USER
+		WHERE
+			USER .uid = #{uid}
+	</delete>
+
+	<select id="searchEmployee" resultMap="EmployeeMap">
+		SELECT
+			employee.uid,
+			employee.uempid,
+			employee.uempname,
+			employee.age,
+			employee.sex,
+			employee.idnum,
+			employee.telnum,
+			employee.startdate,
+			dept.deptname deptnum
+		FROM
+			employee,
+			dept
+		WHERE
+			employee.deptnum = dept.did
+		<if test="uempid != null and uempid != ''">
+			AND employee.uempid = #{uempid}
+		</if>
+		<if test="deptname != null and deptname != ''">
+			AND dept.deptname like CONCAT('%',#{deptname},'%')
+		</if>
+	</select>
+
+	<select id="getEmployeeFromId" resultMap="EmployeeMap">
+		SELECT
+			employee.uempid,
+			employee.uempname,
+			employee.age,
+			employee.sex,
+			employee.idnum,
+			employee.telnum,
+			employee.startdate,
+			dept.did deptnum
+		FROM
+			employee,
+			dept
+		WHERE
+			employee.deptnum = dept.did
+		AND employee.uempid = #{uempid}
+    </select>
+
+	<update id="updateEmployee"  parameterType="edu.cqut.pm_system.entity.Employee">
+		UPDATE employee
+		SET employee.uid = #{uid,jdbcType=VARCHAR},
+		 employee.uempname = #{uempname,jdbcType=VARCHAR},
+		 employee.age = #{age, jdbcType=INTEGER},
+		 employee.sex = #{sex, jdbcType=INTEGER},
+		 employee.idnum = #{idnum,jdbcType=VARCHAR},
+		 employee.telnum = #{telnum,jdbcType=VARCHAR},
+		 employee.deptnum = #{deptnum,jdbcType=VARCHAR},
+		 employee.startdate = #{startdate, jdbcType=TIMESTAMP}
+		WHERE
+			employee.uempid = #{uempid,jdbcType=VARCHAR}
+    </update>
 </mapper>
