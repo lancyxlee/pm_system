@@ -1,115 +1,71 @@
-
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<!DOCTYPE html>
 <html>
-	<head>
-		<title>人事管理系统 ——后台管理</title>
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-		<meta http-equiv="pragma" content="no-cache" />
-		<meta http-equiv="cache-control" content="no-cache" />
-		<meta http-equiv="expires" content="0" />    
-		<meta http-equiv="keywords" content="keyword1,keyword2,keyword3" />
-		<meta http-equiv="description" content="This is my page" />
-		<link href="../css/css.css" type="text/css" rel="stylesheet" />
-		<link rel="stylesheet" type="text/css" href="../js/ligerUI/skins/Aqua/css/ligerui-dialog.css"/>
-		<link href="../js/ligerUI/skins/ligerui-icons.css" rel="stylesheet" type="text/css" />
-		<script type="text/javascript" src="../js/jquery-1.11.0.js"></script>
-	    <script type="text/javascript" src="../js/jquery-migrate-1.2.1.js"></script>
-		<script src="../js/ligerUI/js/core/base.js" type="text/javascript"></script>
-		<script src="../js/ligerUI/js/plugins/ligerDrag.js" type="text/javascript"></script>
-		<script src="../js/ligerUI/js/plugins/ligerDialog.js" type="text/javascript"></script>
-		<script src="../js/ligerUI/js/plugins/ligerResizable.js" type="text/javascript"></script>
-		<link href="../css/pager.css" type="text/css" rel="stylesheet" />
-	</head>
-	<body>
-		<table width="100%" border="0" cellpadding="0" cellspacing="0">
-			 <tr><td height="10"></td></tr>
-			 <tr>
-			    <td width="15" height="32"><img src="../images/main_locleft.gif" width="15" height="32"></td>
-				<td class="main_locbg font2"><img src="../images/pointer.gif">&nbsp;&nbsp;&nbsp;当前位置：公告管理  &gt;  添加公告</td>
-				<td width="15" height="32"><img src="../images/main_locright.gif" width="15" height="32"></td>
-			 </tr>
-		</table>
-	
-		 <!-- 请求异常错误  -->
-		<table width="100%" height="90%" border="0" cellpadding="10" cellspacing="0" class="main_tabbor">
-		  	<tr valign="top">
-			    <td>
-			   
-				  <!-- 隐藏表单，flag表示添加标记 -->
-    	 			<input type="hidden" name="flag" value="2">
-				  <table width="100%" border="0" cellpadding="0" cellspacing="10" class="main_tab">
-					    <tr><td class="font3 fftd">
-					                公告标题：<input type="text" name="title" size="30" id="title"/>
-					    	  <span style="color: #ff0000;"></span>
-					    	</td>
-					    </tr>
-						<tr><td class="main_tdbor"></td></tr>
-						
-						<tr><td class="font3 fftd">公告内容：<br/>
-							<textarea name="content" cols="88" rows="11" id="content"></textarea>
-						</td></tr>
-						<tr><td class="main_tdbor"></td></tr>
-						
-						<tr><td class="font3 fftd">
-								<input type="button" id="noticeForm" value="添加">
-								<input type="reset" value="重置">
-						</td></tr>
-						<tr><td class="main_tdbor"></td></tr>
-					
-				  </table>
-				
-				</td>
-		  	</tr>
-		</table>
-		<div style="height:10px;"></div>
-		<script type="text/javascript">
-			$("#noticeForm").click(function(){
-				var title = $("#title");
-				var content = $("#content");
-				var msg = "";
-				if ($.trim(title.val()) == ""){
-					msg = "公告标题不能为空！";
-					title.focus();
-				}
-				else if($.trim(title.val()).length <= 2){
-					msg = "请输入两个字符以上的标题！";
-					title.focus();
-				}
-				else if($.trim(content.val()) == ""){
-					msg = "公告内容不能为空！";
-					content.focus();
-				}
-				if (msg != ""){
-					$.ligerDialog.error(msg);
-					return false;
-				}
+<head>
+	<meta charset="utf-8">
+	<title>工资核算绩效管理系统 ——绩效管理</title>
+	<link href="../css/css.css" type="text/css" rel="stylesheet"/>
+	<link href="../layui/css/layui.css" rel="stylesheet" media="all">
+	<style type="text/css">
+		input::-webkit-input-placeholder{
+			color:#999999;
+		}
+		.search_bar{
+			padding-left: 10px;
+			font-size: 14px;
+		}
+		.search_btn{
+			font-size: 14px;
+		}
 
-				title = $.trim(title.val());
-				content = $.trim(content.val());
-				console.log(title + "--------" + content);
-				var formData = new FormData();
-				formData.append("title", title);
-				formData.append("content", content);
-				$.ajax({
-					url:"../addNotice",
-					type: "post",
-					data: formData,
-					dataType:"json",
-					async: false,
-					processData : false, // 使数据不做处理
-					contentType : false, // 不要设置Content-Type请求头
-					error: function (res) {
-						$.ligerDialog.error("出错了，请与管理员联系！");
-					},
-					success: function(res){
-						if (res == "SUCCESS") {
-							$.ligerDialog.success("添加成功");
-						} else {
-							$.ligerDialog.error("出错了，请与管理员联系！");
-						}
-					}
-				});
-			});
-		</script>
-	</body>
+	</style>
+</head>
+<body style="width: 100%; background: #F3F7FC;">
+<!-- 导航 -->
+<div style="width: 100%; height: 36px; margin-top: 10px;">
+	<div class="main_locbg font2" style="background:#fff; font-size: 14px; text-align: left; padding: 0 30px 0 30px"><img src="../images/address.png" alt="">&nbsp;当前位置：绩效管理&gt; 绩效核算</div>
+</div>
+<div class="main_tabbor">
+	<!--搜索区域-->
+	<div style="text-align: left; padding: 20px 30px 0 30px">
+		员工工号：<input type="text" class="search_bar" id="empId" placeholder="请输入员工工号"  name="empId" />
+		<span style="margin-left: 10px">员工姓名：</span><input type="text" class="search_bar" id="empName" placeholder="请输入员工姓名" name="empName" />
+		<span style="margin-left: 10px">年份：</span><input type="text" class="search_bar" id="year" placeholder="请输入年份" name="year" style="width: 80px"/>
+		<span style="margin-left: 10px">月份：</span><input type="text" class="search_bar" id="month" placeholder="请输入月份" name="month" style="width: 80px"/>
+		<input id="search" class="search_btn" style="background-color: #2B7FDE; margin-left: 15px;font-size: 14px" type="button" value="查询"/>
+	</div>
+	<!--表单区域-->
+	<div style="height: 4px; background-color: #2B7FDE; margin: 20px 30px -10px 30px;"></div>
+	<div style="margin: 0 30px 0 30px"><table id="performance_table" lay-filter="test"></table></div>
+	<div style="height: 15px; background-color: #FFFFFF; margin: 0 30px 0 30px"></div>
+</div>
+<script src="../js/jquery-3.4.1.js"></script>
+<script src="../layer/layer.js"></script>
+<script src="../layui/layui.js"></script>
+<script>
+	layui.use('table', function () {
+		var table = layui.table;
+		//第一个实例
+		table.render({
+			elem: '#performance_table'
+			, url: '/demo/table/user/' //数据接口
+			, height: 'full-180'
+			, page: true //开启分页
+			, cols: [[ //表头
+				{type: 'checkbox'}
+				, {field: 'id', title: '序号', sort: true, fixed: 'left'}
+				, {field: 'empId', title: '员工工号'}
+				, {field: 'empName', title: '员工姓名'}
+				, {field: 'year', title: '年份', sort: true}
+				, {field: 'month', title: '月份', sort: true}
+				, {field: 'self_rating', title: '自评分'}
+				, {field: 'supv_rating', title: '主管评分'}
+				, {field: 'adst_rating', title: '管理员评分'}
+				, {field: 'baseSalary', title: '绩效总分'}
+				, {field: 'finalSalary', title: '绩效等级'}
+				, {fixed: 'right', title:'操作', align:'center', toolbar: '#barDemo'}
+			]]
+		});
+	});
+</script>
+</body>
 </html>

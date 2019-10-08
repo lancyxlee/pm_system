@@ -30,44 +30,46 @@
 		<span style="margin-left: 10px">员工工号：</span><input type="text" class="search_bar" id="empId" placeholder="请输入员工工号" name="empId" style="padding-left: 10px"/>
 		<input id="search" class="search_btn" style="background-color: #2B7FDE; margin-left: 15px" type="button" value="查询"/>
 		<input id="add" class="search_btn" style="background-color: #2B7FDE;float: right;" type="button" value="新增"/>
-		<input id="delete" class="search_btn" style="background-color: #DE2B2B;float: right; margin-right: 30px" type="button" value="删除"/>
-		<input id="update" class="search_btn" style="background-color: #2BAEDE;float: right; margin-right: 30px" type="button" value="编辑"/>
 	</div>
 	<!--表单区域-->
 	<div style="height: 4px; background-color: #2B7FDE; margin: 20px 30px -10px 30px;"></div>
-	<div style="margin: 0 30px 0 30px"><table id="attendance_table" lay-filter="test"></table></div>
+	<div style="margin: 0 30px 0 30px">
+		<table class="layui-table" lay-data="{height: 'full-180', url:'/test/table/demo2.json?v=2', page: true">
+			<thead>
+			<tr>
+				<th lay-data="{field:'username', align: 'center'}" rowspan="2">序号</th>
+				<th lay-data="{field:'uempid', align: 'center'}" rowspan="2">员工工号</th>
+				<th lay-data="{field:'uempname', align: 'center'}" rowspan="2">员工姓名</th>
+				<th lay-data="{field:'ayear', align: 'center'}" rowspan="2">年份</th>
+				<th lay-data="{field:'amonth', align: 'center'}" rowspan="2">月份</th>
+				<th lay-data="{field:'alatecome', align: 'center'}" rowspan="2">迟到次数</th>
+				<th lay-data="{field:'aearlyleave', align: 'center'}" rowspan="2">早到次数</th>
+				<th lay-data="{field:'aearlycome', align: 'center'}" rowspan="2">早退次数</th>
+				<th lay-data="{align:'center'}" colspan="3">加班次数</th>
+				<th lay-data="{field:'aleave', align: 'center'}" rowspan="2">请假次数</th>
+				<th lay-data="{field:'bonusres', align: 'center'}" rowspan="2">奖罚结果</th>
+				<th lay-data="{fixed: 'right', align: 'center', toolbar: '#barDemo'}" rowspan="2">操作</th>
+			</tr>
+			<tr>
+				<th lay-data="{field:'workovertime', align: 'center'}">工作日</th>
+				<th lay-data="{field:'wovertime', align: 'center'}">双休日</th>
+				<th lay-data="{field:'hovertime', align: 'center'}">国定假日</th>
+			</tr>
+			</thead>
+		</table>
+	</div>
 	<div style="height: 15px; background-color: #FFFFFF; margin: 0 30px 0 30px"></div>
 </div>
 <script src="../js/jquery-3.4.1.js"></script>
 <script src="../layer/layer.js"></script>
 <script src="../layui/layui.js"></script>
+<script type="text/html" id="barDemo">
+	<a lay-event="edit" style="color: #2BAEDE; font-size: 14px">编辑</a>
+	<a lay-event="del" style="color: #DE2B2B; font-size: 14px">删除</a>
+</script>
 <script>
 	layui.use('table', function () {
 		var table = layui.table;
-		//第一个实例
-		table.render({
-			elem: '#attendance_table'
-			, url: '/demo/table/user/' //数据接口
-			, height: 'full-180'
-			, page: true //开启分页
-			, cols: [[ //表头
-				{type: 'checkbox'}
-				, {field: 'id', title: '序号', sort: true, fixed: 'left'}
-				, {field: 'empId', title: '员工工号'}
-				, {field: 'empName', title: '员工姓名'}
-				, {field: 'year', title: '年份'}
-				, {field: 'month', title: '月份'}
-				, {field: 'latecome', title: '迟到次数'}
-				, {field: 'earlycome', title: '早到次数'}
-				, {field: 'earlyleave', title: '早退次数'}
-				, {field: 'workovertime', title: '工作日加班次数'}
-				, {field: 'wovertime', title: '双休日加班次数'}
-				, {field: 'hovertime', title: '国定假日加班次数'}
-				, {field: 'leave', title: '请假次数'}
-				, {field: 'bonusres', title: '奖罚结果'}
-				, {fixed: 'right', title:'操作', align:'center', toolbar: '#barDemo'}
-			]]
-		});
 	});
 	$("#add").click(function(){
 		layer.ready(function(){
@@ -77,20 +79,6 @@
 				shadeClose: true,
 				area: ['500px', '550px'],
 				content: 'staff_iframe.html?type=1',//type=1 新增操作
-				end: function(){
-					//layer.tips('Hi', '#about', {tips: 1})
-				}
-			});
-		});
-	});
-	$("#update").click(function(){
-		layer.ready(function(){
-			layer.open({
-				type: 2,
-				title: '编辑',
-				shadeClose: true,
-				area: ['500px', '550px'],
-				content: 'staff_iframe.html?type=2',//type=2 修改操作
 				end: function(){
 					//layer.tips('Hi', '#about', {tips: 1})
 				}

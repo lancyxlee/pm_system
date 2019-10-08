@@ -48,7 +48,7 @@ line-height:0;
 .topnavlh img { vertical-align:middle;}
 
 .font1 { color:#1f324d; font-size:14px; font-weight:bold; text-indent:3.5em; margin-top:5px;}
-.font2 { color:#1f324d; font-size:12px; font-family:"宋体";}
+.font2 { color:#1f324d; font-size:14px; font-family:"Microsoft YaHei";}
 /*搜索区域字体*/
 .font3 { color:#333333; font-size:16px;font-family: "Microsoft YaHei"}
 .left_nav_top { background:url(../images/left_nav_top.gif) no-repeat; width:200px; height:30px;margin-top: 20px;}

@@ -28,7 +28,7 @@ function loadMenu() {
         + '"childs": []}]},{"id": "16","name": "绩效管理","icon": "/xingxing.png","url": "notice/notice.html","parentId": "1",'
         + '"childs": [{"id": "161","name": "工作计划","icon": "","url": "notice/notice.html","parentId": "16",'
         + '"childs": []},{"id": "162","name": "绩效核算","icon": "","url": "notice/showAddNotice.html","parentId": "16",'
-        + '"childs": []},{"id": "163","name": "绩效奖罚设置","icon": "","url": "notice/showAddNotice.html","parentId": "16",'
+        + '"childs": []},{"id": "163","name": "绩效奖罚设置","icon": "","url": "notice/previewNotice.html","parentId": "16",'
         + '"childs": []}]},{"id": "17","name": "任务管理","icon": "/xingxing.png","url": "document/document.html","parentId": "1",'
         + '"childs": [{"id": "171","name": "任务信息","icon": "","url": "document/document.html","parentId": "17","childs": []}]}]}]';
 
