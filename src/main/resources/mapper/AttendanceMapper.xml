@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.cqut.pm_system.dao.AttendanceDao">
+	<!--设置domain类和数据库中表的字段一一对应，注意数据库字段和domain类中的字段名称不致，此处一定要！-->
+	<resultMap id="AttendanceMap" type="edu.cqut.pm_system.entity.Attendance">
+		<id column="aid" property="aid" jdbcType="VARCHAR" />
+		<result column="uempid" property="uempid" jdbcType="VARCHAR" />
+		<result column="uempname" property="uempname" jdbcType="VARCHAR" />
+		<result column="ayear" property="ayear" jdbcType="INTEGER" />
+		<result column="amonth" property="amonth" jdbcType="INTEGER" />
+		<result column="alatecome" property="alatecome" jdbcType="INTEGER" />
+		<result column="aearlyleave" property="aearlyleave" jdbcType="INTEGER" />
+		<result column="aearlycome" property="workovertime" jdbcType="INTEGER" />
+		<result column="workovertime" property="workovertime" jdbcType="INTEGER" />
+		<result column="aleave" property="aleave" jdbcType="INTEGER" />
+		<result column="bonusres" property="bonusres" jdbcType="DOUBLE" />
+		<result column="wovertime" property="wovertime" jdbcType="INTEGER" />
+		<result column="hovertime" property="hovertime" jdbcType="INTEGER" />
+	</resultMap>
+
+	<select id="getAllDeptAttendance" resultMap="AttendanceMap">
+		SELECT
+			attendance.aid,
+			attendance.uempid,
+			attendance.uempname,
+			attendance.ayear,
+			attendance.amonth,
+			attendance.alatecome,
+			attendance.aearlyleave,
+			attendance.aearlycome,
+			attendance.workovertime,
+			attendance.aleave,
+			attendance.bonusres,
+			attendance.wovertime,
+			attendance.hovertime
+		FROM
+			attendance
+    </select>
+
+	<insert id="addAttendance" parameterType="edu.cqut.pm_system.entity.Attendance">
+        INSERT INTO attendance
+        VALUES
+	    (#{aid, jdbcType=VARCHAR}, #{uempid, jdbcType=VARCHAR}, #{uempname, jdbcType=VARCHAR}, #{ayear, jdbcType=INTEGER}, #{amonth, jdbcType=INTEGER}, #{alatecome, jdbcType=INTEGER}, #{aearlyleave, jdbcType=INTEGER}, #{aearlycome, jdbcType=INTEGER}, #{workovertime, jdbcType=INTEGER}, #{aleave, jdbcType=INTEGER}, #{bonusres, jdbcType=DOUBLE}, #{wovertime, jdbcType=INTEGER}, #{hovertime, jdbcType=INTEGER})
+    </insert>
+</mapper>

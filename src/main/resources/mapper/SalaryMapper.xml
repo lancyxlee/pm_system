@@ -16,6 +16,44 @@
 		<result column="tel" property="tel" jdbcType="VARCHAR" />
 	</resultMap>
 
+	<select id="getAllDeptSalary" resultMap="DeptSalaryMap">
+		SELECT
+			salary_set.salarysetid,
+			dept.deptname deptnum,
+			salary_set.basesalary,
+			salary_set.role
+		FROM
+			salary_set, dept
+		WHERE
+			salary_set.deptnum = dept.did
+    </select>
+
+	<update id="updateBaseSalary">
+		UPDATE salary_set
+		SET salary_set.basesalary = #{basesalary}
+		WHERE
+			salary_set.salarysetid = #{salarysetid}
+    </update>
+
+	<select id="searchDeptSalary" resultMap="DeptSalaryMap">
+		SELECT
+		salary_set.salarysetid,
+		dept.deptname deptnum,
+		salary_set.basesalary,
+		salary_set.role
+		FROM
+		salary_set,
+		dept
+		WHERE
+		salary_set.deptnum = dept.did
+		<if test="role != null and role != ''">
+			AND salary_set.role = #{role}
+		</if>
+		<if test="deptname != null and deptname != ''">
+			AND dept.deptname like CONCAT('%',#{deptname},'%')
+		</if>
+	</select>
+
 	<insert id="addDeptSalary" parameterType="edu.cqut.pm_system.entity.DeptSalary">
         INSERT INTO salary_set
         VALUES

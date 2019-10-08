@@ -1,6 +1,4 @@
-package edu.cqut.pm_system.dao;
-
-import org.apache.ibatis.annotations.Mapper;
+package edu.cqut.pm_system.service;
 
 import java.util.List;
 
@@ -13,11 +11,9 @@ import edu.cqut.pm_system.entity.User;
  * @author llx
  * @date 2019/10/04
  */
-@Mapper
-public interface DeptSalaryDao {
+public interface DeptSalaryService {
+
     List<DeptSalary> getAllDeptSalary();
-    void updateBaseSalary(Double basesalary, String salarysetid);
+    String updateBaseSalary(Double basesalary, String salarysetid);
     List<DeptSalary> searchDeptSalary(Integer role, String deptname);
-    void addDeptSalary(DeptSalary deptSalary);
-    void deleteDeptFromId(String deptnum);
 }

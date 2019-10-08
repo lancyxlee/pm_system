@@ -29,62 +29,72 @@
 		角色：<input type="text" class="search_bar" id="role" placeholder="请输入角色"  name="role" style="padding-left: 10px">
 		<span style="margin-left: 10px">部门名称：</span><input type="text" class="search_bar" id="dept" placeholder="请输入部门名称" name="dept" style="padding-left: 10px">
 		<input id="search" class="search_btn" style="background-color: #2B7FDE; margin-left: 15px" type="button" value="查询"/>
-		<input id="update" class="search_btn" style="background-color: #2BAEDE;float: right; margin-right: 30px" type="button" value="编辑"/>
 	</div>
 	<!--表单区域-->
 	<div style="height: 4px; background-color: #2B7FDE; margin: 20px 30px -10px 30px;"></div>
-	<div style="margin: 0 30px 0 30px"><table id="salay_table" lay-filter="test"></table></div>
+	<div style="margin: 0 30px 0 30px"><table id="salary_table" lay-filter="test"></table></div>
 	<div style="height: 15px; background-color: #FFFFFF; margin: 0 30px 0 30px"></div>
 </div>
 <script src="../js/jquery-3.4.1.js"></script>
 <script src="../layer/layer.js"></script>
 <script src="../layui/layui.js"></script>
+<script type="text/html" id="barDemo">
+	<a lay-event="edit" style="color: #2BAEDE; font-size: 14px">编辑</a>
+</script>
 <script>
 	layui.use('table', function () {
 		var table = layui.table;
 		//第一个实例
 		table.render({
-			elem: '#salay_table'
-			, url: '/demo/table/user/' //数据接口
+			elem: '#salary_table'
+			, url: '/pm/deptSalary/getAllDeptSalary' //数据接口
 			, height: 'full-180'
 			, page: true //开启分页
+			, parseData:function(res) {
+				return {
+					"code": 0,
+					"msg": "",
+					"count": res.length,
+					"data":res
+				}
+			}
 			, cols: [[ //表头
-				{type: 'checkbox'}
-				, {field: 'id', title: '序号', sort: true, fixed: 'left'}
-				, {field: 'deptId', title: '部门编号', sort: true}
-				, {field: 'deptName', title: '部门名称'}
-				, {field: 'role', title: '角色'}
-				, {field: 'baseSalary', title: '基本工资'}
+				{type: 'numbers', title: '序号', align:'center', fixed: 'left'}
+				, {field: 'salarysetid', align:'center', title: '部门编号', sort: true}
+				, {field: 'deptnum', align:'center', title: '部门名称'}
+				, {field: 'role', title: '角色', align:'center', templet: function(row){if(row.role === 1){return '部门经理'} else { return '普通员工'}}}
+				, {field: 'basesalary', title: '基本工资', align:'center'}
 				, {fixed: 'right', title:'操作', align:'center', toolbar: '#barDemo'}
 			]]
 		});
-	});
-	$("#add").click(function(){
-		layer.ready(function(){
-			layer.open({
-				type: 2,
-				title: '新增',
-				shadeClose: true,
-				area: ['500px', '550px'],
-				content: 'staff_iframe.html?type=1',//type=1 新增操作
-				end: function(){
-					//layer.tips('Hi', '#about', {tips: 1})
-				}
-			});
+		//监听行工具事件
+		table.on('tool(test)', function(obj){
+			var data = obj.data;
+			if(obj.event === 'edit'){
+				//编辑按钮事件
+				layer.ready(function(){
+					layer.open({
+						type: 2,
+						title: '编辑',
+						shadeClose: true,
+						area: ['500px', '350px'],
+						content: 'dept_salary_iframe.html?type=2&id=' + data.salarysetid
+						//type=2 编辑操作
+					});
+				});
+			}
 		});
 	});
-	$("#update").click(function(){
-		layer.ready(function(){
-			layer.open({
-				type: 2,
-				title: '编辑',
-				shadeClose: true,
-				area: ['500px', '550px'],
-				content: 'staff_iframe.html?type=2',//type=2 修改操作
-				end: function(){
-					//layer.tips('Hi', '#about', {tips: 1})
-				}
-			});
+	// 查询按钮事件
+	$("#search").click(function(){
+		var role = $("#role").val();
+		var deptnum = $("#dept").val();
+		layui.table.reload('salary_table', {
+			url: '/pm/deptSalary/searchDeptSalary'
+			,where: {
+				role: role
+				,deptnum: deptnum
+			}
 		});
 	});
 </script>

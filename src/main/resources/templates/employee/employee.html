@@ -34,26 +34,25 @@
 	<!--表单区域-->
 	<div style="height: 4px; background-color: #2B7FDE; margin: 20px 30px -10px 30px;"></div>
 	<div style="margin: 0 30px 0 30px">
-		<table class="layui-table" lay-data="{height: 'full-180', url:'/test/table/demo2.json?v=2', page: true">
+		<table class="layui-table" lay-data="{height: 'full-180', url:'/pm/attendance/getAllAttendance', type:'json', page: true">
 			<thead>
 			<tr>
 				<th lay-data="{field:'username', align: 'center'}" rowspan="2">序号</th>
 				<th lay-data="{field:'uempid', align: 'center'}" rowspan="2">员工工号</th>
 				<th lay-data="{field:'uempname', align: 'center'}" rowspan="2">员工姓名</th>
-				<th lay-data="{field:'ayear', align: 'center'}" rowspan="2">年份</th>
-				<th lay-data="{field:'amonth', align: 'center'}" rowspan="2">月份</th>
-				<th lay-data="{field:'alatecome', align: 'center'}" rowspan="2">迟到次数</th>
-				<th lay-data="{field:'aearlyleave', align: 'center'}" rowspan="2">早到次数</th>
-				<th lay-data="{field:'aearlycome', align: 'center'}" rowspan="2">早退次数</th>
+				<th lay-data="{field:'ayear', align: 'center', edit: 'number'}" rowspan="2">年份</th>
+				<th lay-data="{field:'amonth', align: 'center', edit: 'number'}" rowspan="2">月份</th>
+				<th lay-data="{field:'alatecome', align: 'center', edit: 'number'}" rowspan="2">迟到次数</th>
+				<th lay-data="{field:'aearlycome', align: 'center', edit: 'number'}" rowspan="2">早退次数</th>
 				<th lay-data="{align:'center'}" colspan="3">加班次数</th>
-				<th lay-data="{field:'aleave', align: 'center'}" rowspan="2">请假次数</th>
-				<th lay-data="{field:'bonusres', align: 'center'}" rowspan="2">奖罚结果</th>
+				<th lay-data="{field:'aleave', align: 'center', edit: 'number'}" rowspan="2">请假次数</th>
+				<th lay-data="{field:'bonusres', align: 'center', edit: 'number'}" rowspan="2">奖罚结果</th>
 				<th lay-data="{fixed: 'right', align: 'center', toolbar: '#barDemo'}" rowspan="2">操作</th>
 			</tr>
 			<tr>
-				<th lay-data="{field:'workovertime', align: 'center'}">工作日</th>
-				<th lay-data="{field:'wovertime', align: 'center'}">双休日</th>
-				<th lay-data="{field:'hovertime', align: 'center'}">国定假日</th>
+				<th lay-data="{field:'workovertime', align: 'center', edit: 'number'}">工作日</th>
+				<th lay-data="{field:'wovertime', align: 'center', edit: 'number'}">双休日</th>
+				<th lay-data="{field:'hovertime', align: 'center', edit: 'number'}">国定假日</th>
 			</tr>
 			</thead>
 		</table>
@@ -78,7 +77,7 @@
 				title: '新增',
 				shadeClose: true,
 				area: ['500px', '550px'],
-				content: 'staff_iframe.html?type=1',//type=1 新增操作
+				content: 'attendance_iframe.html?type=1',//type=1 新增操作
 				end: function(){
 					//layer.tips('Hi', '#about', {tips: 1})
 				}

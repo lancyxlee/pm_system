@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>员工信息管理弹出页</title>
+    <link href="../layui/css/layui.css" rel="stylesheet" media="all">
+    <link href="../css/theme.css" rel="stylesheet">
+</head>
+<body style="padding: 30px 50px 30px 30px">
+<form class="layui-form" action="">
+    <div class="layui-form-item">
+        <label class="layui-form-label">员工工号</label>
+        <div class="layui-input-block">
+            <select name="uempid" lay-verify="" lay-search>
+                <option value="">请搜索选择员工工号</option>
+            </select>
+        </div>
+    </div>
+    <div id="username" class="layui-form-item">
+        <label class="layui-form-label">员工姓名</label>
+        <div class="layui-input-block">
+            <input type="text" name="uempname" required lay-verify="required" placeholder="员工姓名"
+                   autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit lay-filter="formDemo">提交</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+    </div>
+</form>
+<script src="../js/jquery-3.4.1.js"></script>
+<script src="../layer/layer.js"></script>
+<script src="../layui/layui.js"></script>
+<script>
+    var type;
+    var id;
+    $(function(){
+        parent.layer.iframeAuto(parent.layer.getFrameIndex(window.name));
+        var url = location.search; //这一条语句获取了包括问号开始到参数的最后，不包括前面的路径
+        console.log(url);
+        var params = url.substr(1);//去掉问号
+        var pa = params.split("&");
+        var s = {};
+        for(var i = 0; i < pa.length; i ++){
+            s[pa[i].split("=")[0]] = unescape(pa[i].split("=")[1]);
+        }
+        type = s.type + "";
+        id = s.uid + "";
+        $.ajax({
+            url: "/pm/employee/getAllEmployee",
+            type: "get",
+            dataType: "json",
+            error: function () {
+                layer.alert('出错了，请与管理员联系！', {icon: 2});
+            },
+            success: function (res) {
+                console.log(res);
+                $.each(res, function (index, item) {
+                    $('#dept_list').append(new Option(item.uempid, item.uempname));// 下拉菜单里添加元素
+                    layui.form.render('select');
+                });
+            }
+        });
+    });
+
+    layui.use('form', function () {
+        var form = layui.form;
+        //监听提交
+        form.on('submit(formDemo)', function (data) {
+            $.ajax({
+                type:"post",
+                url:"/pm/attendance/addAttendance",
+                data : {
+                    uempid : data.field.uempid,
+                    uempname : data.field.uempname
+                },
+                datatype: "json",
+                error: function(){
+                    //请求出错处理
+                    layer.alert('出错了，请与管理员联系！', {icon: 2});
+                },
+                success:function(res){
+                    if (res === "FAIL") {
+                        parent.layer.alert('新增失败', {icon: 2});
+                        parent.layer.close(parent.layer.getFrameIndex(window.name));
+                    } else {
+                        parent.layer.alert('新增成功', {icon: 1});
+                        parent.layui.table.reload('staff_table', {
+                            url: '/pm/attendance/getAllAttendance'
+                        });
+                        parent.layer.close(parent.layer.getFrameIndex(window.name));
+                    }
+                }
+            });
+            return false;
+        });
+    });
+    layui.use('laydate', function(){
+        var laydate = layui.laydate;
+        //执行一个laydate实例
+        laydate.render({
+            elem: '#entry_time' //指定元素
+            ,theme: '#2B7FDE'
+            ,trigger: 'click'
+        });
+    });
+</script>
+</body>
+</html>

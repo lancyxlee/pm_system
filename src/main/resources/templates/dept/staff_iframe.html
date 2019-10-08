@@ -18,7 +18,7 @@
     <div class="layui-form-item">
         <label class="layui-form-label">年龄</label>
         <div class="layui-input-block">
-            <input type="text" name="age" required lay-verify="required" placeholder="请输入年龄"
+            <input type="number" name="age" required lay-verify="required" placeholder="请输入年龄"
                    autocomplete="off" class="layui-input">
         </div>
     </div>
@@ -32,14 +32,14 @@
     <div class="layui-form-item">
         <label class="layui-form-label">身份证号码</label>
         <div class="layui-input-block">
-            <input type="text" name="idnum" required lay-verify="required" placeholder="请输入身份证号码"
+            <input type="number" name="idnum" required lay-verify="required" placeholder="请输入身份证号码"
                    autocomplete="off" class="layui-input">
         </div>
     </div>
     <div class="layui-form-item">
         <label class="layui-form-label">电话号码</label>
         <div class="layui-input-block">
-            <input type="text" name="telnum" required lay-verify="required" placeholder="请输入电话号码"
+            <input type="number" name="telnum" required lay-verify="required" placeholder="请输入电话号码"
                    autocomplete="off" class="layui-input">
         </div>
     </div>
@@ -141,7 +141,10 @@
                     console.log(res.deptnum);
                     //document.getElementById("dept_list").value = res.deptnum;
                     //$("#dept_list").val(res.deptnum);
-                    var time = new Date(res.startdate);
+                    var time = new Date(row.startdate);
+                    var day = time.getDate();
+                    if (time.getDate() < 10)
+                        day = "0" + time.getDate();
                     var startdate = time.getFullYear() + "-" + (time.getMonth() + 1) + "-" + day;
                     $("input[name='startdate']").attr('value', startdate);
                     $("#username").remove();
