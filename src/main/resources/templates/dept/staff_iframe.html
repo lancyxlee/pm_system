@@ -93,6 +93,7 @@
     var type;
     var id;
     $(function(){
+        parent.layer.iframeAuto(parent.layer.getFrameIndex(window.name));
         var url = location.search; //这一条语句获取了包括问号开始到参数的最后，不包括前面的路径
         console.log(url);
         var params = url.substr(1);//去掉问号
@@ -141,9 +142,6 @@
                     //document.getElementById("dept_list").value = res.deptnum;
                     //$("#dept_list").val(res.deptnum);
                     var time = new Date(res.startdate);
-                    var day = time.getDate();
-                    if (time.getDate() < 10)
-                        day = "0" + time.getDate();
                     var startdate = time.getFullYear() + "-" + (time.getMonth() + 1) + "-" + day;
                     $("input[name='startdate']").attr('value', startdate);
                     $("#username").remove();
@@ -223,7 +221,6 @@
                                 url: '/pm/employee/getAllEmployee'
                             });
                             parent.layer.close(parent.layer.getFrameIndex(window.name));
-
                         }
                     }
                 });
