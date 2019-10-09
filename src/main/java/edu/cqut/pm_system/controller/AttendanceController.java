@@ -10,14 +10,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import edu.cqut.pm_system.entity.Attendance;
-import edu.cqut.pm_system.entity.DeptSalary;
+import edu.cqut.pm_system.entity.AttendanceSet;
 import edu.cqut.pm_system.service.AttendanceService;
-import edu.cqut.pm_system.service.DeptSalaryService;
 import edu.cqut.pm_system.util.EntityIDFactory;
 import edu.cqut.pm_system.util.JacksonUtil;
 
@@ -80,5 +77,15 @@ public class AttendanceController {
     public String searchAttendance(String uempid, String uempname, Integer ayear, Integer amonth) {
         List<Attendance> attendances = attendanceService.searchAttendance(uempid, uempname, ayear, amonth);
         return JacksonUtil.objectToJson(attendances);
+    }
+
+    @RequestMapping(value = "getAllAttendanceSet", method = RequestMethod.GET)
+    public String getAllAttendanceSet() {
+        AttendanceSet result = attendanceService.getAllAttendanceSet();
+        if (result != null) {
+            return JacksonUtil.objectToJson(result);
+        } else {
+            return "FAIL";
+        }
     }
 }

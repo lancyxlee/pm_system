@@ -18,6 +18,30 @@
 		<result column="wovertime" property="wovertime" jdbcType="INTEGER" />
 		<result column="hovertime" property="hovertime" jdbcType="INTEGER" />
 	</resultMap>
+	<resultMap id="AttendanceSetMap" type="edu.cqut.pm_system.entity.AttendanceSet">
+		<id column="setid" property="setid" jdbcType="VARCHAR" />
+		<result column="setlatecome" property="setlatecome" jdbcType="DOUBLE" />
+		<result column="setearlyleave" property="setearlyleave" jdbcType="DOUBLE" />
+		<result column="setearlycome" property="setearlycome" jdbcType="DOUBLE" />
+		<result column="setworkovertime" property="setworkovertime" jdbcType="DOUBLE" />
+		<result column="setleave" property="setleave" jdbcType="DOUBLE" />
+		<result column="setwovertime" property="setwovertime" jdbcType="DOUBLE" />
+		<result column="sethovertime" property="sethovertime" jdbcType="DOUBLE" />
+	</resultMap>
+
+	<select id="getAllAttendanceSet" resultMap="AttendanceSetMap">
+		SELECT
+			attendance_set.setid,
+			attendance_set.setlatecome,
+			attendance_set.setearlyleave,
+			attendance_set.setearlycome,
+			attendance_set.setworkovertime,
+			attendance_set.setleave,
+			attendance_set.setwovertime,
+			attendance_set.sethovertime
+		FROM
+			attendance_set
+    </select>
 
 	<select id="getAllAttendance" resultMap="AttendanceMap">
 		SELECT

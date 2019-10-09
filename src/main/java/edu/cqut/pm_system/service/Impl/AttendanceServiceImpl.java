@@ -8,6 +8,7 @@ import java.util.List;
 import edu.cqut.pm_system.dao.AttendanceDao;
 import edu.cqut.pm_system.dao.DeptSalaryDao;
 import edu.cqut.pm_system.entity.Attendance;
+import edu.cqut.pm_system.entity.AttendanceSet;
 import edu.cqut.pm_system.entity.DeptSalary;
 import edu.cqut.pm_system.service.AttendanceService;
 import edu.cqut.pm_system.service.DeptSalaryService;
@@ -47,6 +48,7 @@ public class AttendanceServiceImpl implements AttendanceService {
         try {
 //            dayli = basesalary / 21.75
 //            (dayli * setworkovertime * workovertime + dayli * sethovertime * hovertime + dayli * setwovertime * wovertime) - (setlatecome * alatecome + setearlyleave * aearlyleave) - (dayli * aleave)
+            AttendanceSet attendanceSet = attendanceDao.getAllAttendanceSet();
             attendanceDao.updateAttendance(ayear, amonth, alatecome, aearlyleave, workovertime, aleave, wovertime, hovertime, aid);
             return "SUCCESS";
         } catch (Exception e) {
@@ -69,6 +71,11 @@ public class AttendanceServiceImpl implements AttendanceService {
     @Override
     public List<Attendance> searchAttendance(String uempid, String uempname, Integer ayear, Integer amonth) {
         return attendanceDao.searchAttendance(uempid, uempname, ayear, amonth);
+    }
+
+    @Override
+    public AttendanceSet getAllAttendanceSet() {
+        return attendanceDao.getAllAttendanceSet();
     }
 
 }

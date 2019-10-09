@@ -11,19 +11,23 @@ public class AttendanceSet {
     private Double setlatecome;
     private Double setearlyleave;
     private Double setearlycome;
-    private Double setovertime;
+    private Double setworkovertime;
     private Double setleave;
+    private Double setwovertime;
+    private Double sethovertime;
 
     public AttendanceSet() {
     }
 
-    public AttendanceSet(String setid, Double setlatecome, Double setearlyleave, Double setearlycome, Double setovertime, Double setleave) {
+    public AttendanceSet(String setid, Double setlatecome, Double setearlyleave, Double setearlycome, Double setworkovertime, Double setleave, Double setwovertime, Double sethovertime) {
         this.setid = setid;
         this.setlatecome = setlatecome;
         this.setearlyleave = setearlyleave;
         this.setearlycome = setearlycome;
-        this.setovertime = setovertime;
+        this.setworkovertime = setworkovertime;
         this.setleave = setleave;
+        this.setwovertime = setwovertime;
+        this.sethovertime = sethovertime;
     }
 
     public String getSetid() {
@@ -58,12 +62,12 @@ public class AttendanceSet {
         this.setearlycome = setearlycome;
     }
 
-    public Double getSetovertime() {
-        return setovertime;
+    public Double getSetworkovertime() {
+        return setworkovertime;
     }
 
-    public void setSetovertime(Double setovertime) {
-        this.setovertime = setovertime;
+    public void setSetworkovertime(Double setworkovertime) {
+        this.setworkovertime = setworkovertime;
     }
 
     public Double getSetleave() {
@@ -74,6 +78,22 @@ public class AttendanceSet {
         this.setleave = setleave;
     }
 
+    public Double getSetwovertime() {
+        return setwovertime;
+    }
+
+    public void setSetwovertime(Double setwovertime) {
+        this.setwovertime = setwovertime;
+    }
+
+    public Double getSethovertime() {
+        return sethovertime;
+    }
+
+    public void setSethovertime(Double sethovertime) {
+        this.sethovertime = sethovertime;
+    }
+
     @Override
     public String toString() {
         return "AttendanceSet{" +
@@ -81,8 +101,10 @@ public class AttendanceSet {
                 ", setlatecome=" + setlatecome +
                 ", setearlyleave=" + setearlyleave +
                 ", setearlycome=" + setearlycome +
-                ", setovertime=" + setovertime +
+                ", setworkovertime=" + setworkovertime +
                 ", setleave=" + setleave +
+                ", setwovertime=" + setwovertime +
+                ", sethovertime=" + sethovertime +
                 '}';
     }
 }
