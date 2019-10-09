@@ -2,13 +2,14 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-<title>人事管理系统——添加用户</title>
+<title>工资核算绩效管理系统 ——用户管理</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="pragma" content="no-cache" />
 <meta http-equiv="cache-control" content="no-cache" />
 <meta http-equiv="expires" content="0" />
 <meta http-equiv="keywords" content="keyword1,keyword2,keyword3" />
 <meta http-equiv="description" content="This is my page" />
+<link href="../layui/css/layui.css" rel="stylesheet" media="all">
 <link href="../css/css.css" type="text/css" rel="stylesheet" />
 <link rel="stylesheet" type="text/css"
 	href="../js/ligerUI/skins/Aqua/css/ligerui-dialog.css" />
@@ -80,63 +81,6 @@
 
 
 </style>
-
-	<script type="text/javascript">
-	/** 员工表单提交 */
-	$(document).ready(
-			function() {
-				$("#submit").on("click",function() {
-							var username = $("#username");
-							var status = $("#status");
-							var loginname = $("#loginname");
-							var password = $("#password");
-							var msg = "";
-							if ($.trim(username.val()) == "") {
-								msg = "姓名不能为空！";
-								username.focus();
-							} else if ($.trim(loginname.val()) == "") {
-								msg = "登录名不能为空！";
-								loginname.focus();
-							} else if ($.trim(loginname.val()).length < 6
-									|| $.trim(loginname.val()).length > 20) {
-								msg = "登录名需要大于6位小于20位！";
-								loginname.focus();
-							} else if ($.trim(password.val()) == "") {
-								msg = "密码不能为空！";
-								password.focus();
-							}
-							if (msg != "") {
-								$.ligerDialog.error(msg);
-								return false;
-							}
-
-							$.ajax({
-								url : "../add",
-								type : 'POST',
-								data : {
-									username : username.val(),
-									status : status.val(),
-									loginname : loginname.val(),
-									password : password.val()
-								},
-								error : function(res) {
-									console.log(res);
-									console.log(eval(res));
-									$.ligerDialog.error("出错了，请与管理员联系！");
-								},
-								success : function(res) {
-									console.log(res);
-									var json = eval(res);
-									if (json == "SUCCESS") {
-										$.ligerDialog.success("添加成功");
-									} else {
-										$.ligerDialog.error("登录名已存在！");
-									}
-								}
-							});
-						});
-			});
-</script>
 </head>
 <body class="layout-fixed"  style="background: #f3f7fc;">
 	<!--<script language="JavaScript">-->
@@ -155,15 +99,73 @@
 	</table>
 	<div class="content" >
 		<div class="input-content">
-			<p>原密码：</p><input type="text" placeholder="请输入原密码" name="oldPassword"/>
-			<p>新密码：</p><input type="text" placeholder="请输入新密码" name="newPassword"/>
-			<p>确认密码：</p><input type="text" placeholder="请输入确认密码" name="confirmPassword"/>
-			<p></p><input type="submit" value="确认修改" class="button"/>
+			<p>原密码：</p><input type="password" placeholder="请输入原密码" name="oldPassword" id="oldPassword"/>
+			<p>新密码：</p><input type="password" placeholder="请输入新密码" name="newPassword" id="newPassword"/>
+			<p>确认密码：</p><input type="password" placeholder="请输入确认密码" name="confirmPassword" id="confirmPassword"/>
+			<p></p><input type="submit" id="editBtn" value="确认修改" class="button"/>
 		</div>
 	</div>
 	<div style="height: 10px;"></div>
 
-
-
+<script src="../js/jquery-3.4.1.js"></script>
+<script src="../layer/layer.js"></script>
+<script src="../layui/layui.js"></script>
+<script type="text/javascript">
+	/** 修改密码 */
+	$(function() {
+		$("#editBtn").on("click",function() {
+			var oldPwd = $("#oldPassword");
+			var newPwd = $("#newPassword");
+			var confirmPwd = $("#confirmPassword");
+			console.log($.trim(oldPwd.val()));
+			var msg="";
+			if ($.trim(oldPwd.val()) == "") {
+				msg = "原密码不能为空！";
+				oldPwd.focus();
+			}
+			else if ($.trim(newPwd.val()) == "") {
+				msg = "新密码不能为空！";
+				newPwd.focus();
+			} else if ($.trim(newPwd.val()).length < 6
+					|| $.trim(newPwd.val()).length > 18) {
+				msg = "新密码需要大于6位小于18位！";
+				newPwd.focus();
+			} else if ($.trim(confirmPwd.val()) == "") {
+				msg = "确认密码不能为空！";
+				confirmPwd.focus();
+			}else if(!$.trim(newPwd.val()===confirmPwd.val())) {
+				msg = "两次密码输入不一致";
+			}
+			if (msg != "") {
+				layer.alert(msg, {icon: 2});
+				return false;
+			}
+			$.ajax({
+				url : "/pm/user/updatePassword",
+				type : 'post',
+				data : {
+					oldPwd : oldPwd.val(),
+					newPwd : newPwd.val(),
+					confirmPwd : confirmPwd.val()
+				},
+				dataType: 'json',
+				success: function(response) {
+					console.log(response);
+					if(response === "SUCCESS"){
+						layer.alert('修改密码成功！', {icon: 1});
+						// 其他操作
+					} else if (response === "INCORRECT"){
+						layer.alert('原始密码不匹配，请重试！', {icon: 2});
+					} else {
+						layer.alert('联系后台管理员！', {icon: 2});
+					}
+				},
+				error: function(response) {
+					alert('联系后台管理员！');
+				}
+			});
+		});
+	})
+</script>
 </body>
 </html>

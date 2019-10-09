@@ -31,9 +31,10 @@
             width: 350px;
             height: 36px;
             font-size: 14px;
-            border: 1px solid #999999;
+            border: 1px solid #eeeeee;
 			padding-left: 10px;
 			font-family: "Microsoft YaHei";
+            background-color: #f7f7f7;
         }
 		.input_name {
 			margin-bottom: 9px;
@@ -56,7 +57,9 @@
             color:#999999;
         }
     </style>
+    <script type="application/javascript">
 
+    </script>
 </head>
 <body id="main_body" style="background: #f3f7fc;">
 <!-- 导航 -->
@@ -77,32 +80,74 @@
         个人信息</p>
     <table style="width:100%;height:60%;text-align: center;padding-left: 40%;padding-right: 40%">
         <tr>
-            <td><div style="width: 350px;margin:0 auto;"><p class="input_name">员工姓名：</p><input type="text" name="uempname" id="uempname" placeholder="请输入员工信息" class="input_box"/></div>
+            <td><div style="width: 350px;margin:0 auto;"><p class="input_name">员工工号：</p><input type="text" name="uempId" id="uempId" disabled class="input_box"/></div>
             </td>
-            <td><div style="width: 350px;margin:0 auto"><p class="input_name">工作部门：</p><input type="text" name="deptnum" id="deptnum" placeholder="请输入工作部门" class="input_box"/></div>
-            </td>
-        </tr>
-        <tr>
-            <td><div style="width: 350px;margin:0 auto"><p class="input_name">账号：</p><input type="text" name="username" id="username" placeholder="请输入账号" class="input_box"/></div>
-            </td>
-            <td><div style="width: 350px;margin:0 auto"><p class="input_name">入职时间：</p><input type="text" name="startdate" id="startdate" placeholder="请输入入职时间" class="input_box"/></div>
+            <td><div style="width: 350px;margin:0 auto;"><p class="input_name">员工姓名：</p><input type="text" name="uempname" id="uempname" disabled class="input_box"/></div>
             </td>
         </tr>
         <tr>
-            <td><div style="width: 350px;margin:0 auto"><p class="input_name">身份证号：</p><input type="text" name="idnum" id="idnum" placeholder="请输入身份证号" class="input_box"/></div>
+            <td><div style="width: 350px;margin:0 auto"><p class="input_name">账号：</p><input type="text" name="username" id="username" disabled class="input_box"/></div>
             </td>
-            <td><div style="width: 350px;margin:0 auto"><p class="input_name">性别：</p><input type="text" name="sex" id="sex" placeholder="请输入性别" class="input_box"/></div>
+            <td><div style="width: 350px;margin:0 auto"><p class="input_name">工作部门：</p><input type="text" name="deptnum" id="deptnum" disabled class="input_box"/></div>
             </td>
         </tr>
         <tr>
-            <td><div style="width: 350px;margin:0 auto"><p class="input_name">联系方式：</p><input type="text" name="telnum" id="telnum" placeholder="请输入联系方式" class="input_box"/></div>
+            <td><div style="width: 350px;margin:0 auto"><p class="input_name">入职时间：</p><input type="text" name="startdate" id="startdate" disabled class="input_box"/></div>
             </td>
-            <td><div style="width: 350px;margin:0 auto"><p class="input_name">年龄：</p><input type="text" name="age" id="age" placeholder="请输入年龄" class="input_box"/></div>
+            <td><div style="width: 350px;margin:0 auto"><p class="input_name">身份证号：</p><input type="text" name="idnum" id="idnum" disabled class="input_box"/></div>
+            </td>
+        </tr>
+        <tr>
+            <td><div style="width: 350px;margin:0 auto"><p class="input_name">性别：</p><input type="text" name="sex" id="sex" disabled class="input_box"/></div>
+            </td>
+            <td><div style="width: 350px;margin:0 auto"><p class="input_name">年龄：</p><input type="text" name="age" id="age" disabled class="input_box"/></div>
+            </td>
+        </tr>
+        <tr>
+            <td><div style="width: 350px;margin:0 auto"><p class="input_name">联系方式：</p><input type="text" name="telnum" id="telnum" disabled class="input_box"/></div>
+            </td>
+            <td><div style="width: 350px;margin:0 auto"><p class="input_name">角色：</p><input type="text" name="role" id="role" disabled class="input_box"/></div>
             </td>
         </tr>
     </table>
-    <input class="editbutton" type="button" value="修改" style=" color: #FFFFFF;"/>
 </div>
 <div style="height:10px;"></div>
+<script type="text/javascript">
+    $(function() {
+        $.ajax({
+            url : "/pm/user/getUserInfo",
+            type : 'post',
+            dataType: 'json',
+            success: function(response) {
+                if(response === "FAIL"){
+                    layer.alert('联系后台管理员！', {icon: 2});
+                } else {
+                    document.getElementById("uempId").value = response.uid;
+                    document.getElementById("uempname").value = response.uempname;
+                    document.getElementById("username").value = response.username;
+                    document.getElementById("deptnum").value = response.deptnum;
+                    var time = new Date(response.startdate);
+                    var day = time.getDate();
+                    if (time.getDate() < 10)
+                        day = "0" + time.getDate();
+                    document.getElementById("startdate").value = time.getFullYear() + "-" + (time.getMonth() + 1) + "-" + day;
+                    document.getElementById("idnum").value = response.idnum;
+                    var sex;
+                    if(response.sex === 0){sex = '男'} else { sex ='女'}
+                    document.getElementById("sex").value = sex;
+                    document.getElementById("age").value = response.age;
+                    document.getElementById("telnum").value = response.telnum;
+                    var role;
+                    if(response.role === 0){role = '管理员'}else if(response.role === 1){ role = '部门经理'} else { role ='普通员工'}
+                    document.getElementById("role").value = role;
+                }
+            },
+            error: function(response) {
+                alert('联系后台管理员！');
+            }
+        });
+
+    })
+</script>
 </body>
 </html>
