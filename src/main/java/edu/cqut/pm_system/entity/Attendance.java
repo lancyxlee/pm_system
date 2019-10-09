@@ -14,7 +14,7 @@ public class Attendance {
     private Integer alatecome;
     private Integer aearlyleave;
     private Integer aearlycome;
-    private Integer aovertime;
+    private Integer workovertime;
     private Integer aleave;
     private Integer wovertime;
     private Integer hovertime;
@@ -23,7 +23,7 @@ public class Attendance {
     public Attendance() {
     }
 
-    public Attendance(String aid, String uempid, String uempname, Integer ayear, Integer amonth, Integer alatecome, Integer aearlyleave, Integer aearlycome, Integer aovertime, Integer aleave, Integer wovertime, Integer hovertime, Double bonusres) {
+    public Attendance(String aid, String uempid, String uempname, Integer ayear, Integer amonth, Integer alatecome, Integer aearlyleave, Integer aearlycome, Integer workovertime, Integer aleave, Integer wovertime, Integer hovertime, Double bonusres) {
         this.aid = aid;
         this.uempid = uempid;
         this.uempname = uempname;
@@ -32,7 +32,7 @@ public class Attendance {
         this.alatecome = alatecome;
         this.aearlyleave = aearlyleave;
         this.aearlycome = aearlycome;
-        this.aovertime = aovertime;
+        this.workovertime = workovertime;
         this.aleave = aleave;
         this.wovertime = wovertime;
         this.hovertime = hovertime;
@@ -103,12 +103,12 @@ public class Attendance {
         this.aearlycome = aearlycome;
     }
 
-    public Integer getAovertime() {
-        return aovertime;
+    public Integer getWorkovertime() {
+        return workovertime;
     }
 
-    public void setAovertime(Integer aovertime) {
-        this.aovertime = aovertime;
+    public void setWorkovertime(Integer workovertime) {
+        this.workovertime = workovertime;
     }
 
     public Integer getAleave() {
@@ -154,7 +154,7 @@ public class Attendance {
                 ", alatecome=" + alatecome +
                 ", aearlyleave=" + aearlyleave +
                 ", aearlycome=" + aearlycome +
-                ", aovertime=" + aovertime +
+                ", workovertime=" + workovertime +
                 ", aleave=" + aleave +
                 ", wovertime=" + wovertime +
                 ", hovertime=" + hovertime +

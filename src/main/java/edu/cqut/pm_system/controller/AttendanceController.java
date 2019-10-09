@@ -1,12 +1,18 @@
 package edu.cqut.pm_system.controller;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import edu.cqut.pm_system.entity.Attendance;
 import edu.cqut.pm_system.entity.DeptSalary;
@@ -28,13 +34,11 @@ public class AttendanceController {
     AttendanceService attendanceService;
 
     @RequestMapping(value = "getAllAttendance", method = RequestMethod.GET)
-    public String getAllDeptSalary() {
-        List<Attendance> result = attendanceService.getAllAttendance();
-        if (result != null) {
-            return JacksonUtil.objectToJson(result);
-        } else {
-            return "FAIL";
-        }
+    public String getAllAttendance(@RequestParam(value = "page", defaultValue = "1") Integer page, @RequestParam(value = "limit", defaultValue = "10") Integer limit) {
+        PageHelper.startPage(page, limit);
+        List<Attendance> attendances = attendanceService.getAllAttendance();
+        PageInfo<Attendance> attendancePageInfo = new PageInfo<>(attendances);
+        return JacksonUtil.objectToJson(attendances);
     }
 
     @RequestMapping(value = "addAttendance", method = RequestMethod.POST)
@@ -43,12 +47,7 @@ public class AttendanceController {
         Calendar cal = Calendar.getInstance();
         int year = cal.get(Calendar.YEAR);
         int month = cal.get(Calendar.MONTH) + 1;
-        Attendance attendance = new Attendance();
-        attendance.setAid(id);
-        attendance.setUempid(uempid);
-        attendance.setUempname(uempname);
-        attendance.setAyear(year);
-        attendance.setAmonth(month);
+        Attendance attendance = new Attendance(id, uempid, uempname, year, month, 0, 0, 0, 0, 0, 0, 0, 0.0);
         String result = attendanceService.addAttendance(attendance);
         if ("SUCCESS".equals(result)) {
             return JacksonUtil.objectToJson("SUCCESS");
@@ -57,27 +56,29 @@ public class AttendanceController {
         }
     }
 
-//    @RequestMapping(value = "updateBaseSalary", method = RequestMethod.POST)
-//    public String updateEmployee(Double basesalary, String salarysetid) {
-//        String result = deptSalaryService.updateBaseSalary(basesalary, salarysetid);
-//        if ("SUCCESS".equals(result)) {
-//            return JacksonUtil.objectToJson("SUCCESS");
-//        } else {
-//            return JacksonUtil.objectToJson("FAIL");
-//        }
-//    }
-//
-//    @RequestMapping(value = "searchDeptSalary", method = RequestMethod.GET)
-//    public String searchDeptSalary(String role, String deptname) {
-//        List<DeptSalary> result;
-//        if ("".equals(role)) result = deptSalaryService.searchDeptSalary(null, deptname);
-//        else if ("部门经理".contains(role)) result = deptSalaryService.searchDeptSalary(1, deptname);
-//        else if ("普通员工".contains(role)) result =  deptSalaryService.searchDeptSalary(2, deptname);
-//        else result = deptSalaryService.searchDeptSalary(null, deptname);
-//        if (result != null) {
-//            return JacksonUtil.objectToJson(result);
-//        } else {
-//            return "FAIL";
-//        }
-//    }
+    @RequestMapping(value = "updateAttendance", method = RequestMethod.POST)
+    public String updateAttendance(Integer ayear, Integer amonth, Integer alatecome, Integer aearlyleave, Integer workovertime, Integer aleave, Integer wovertime, Integer hovertime, String aid) {
+        String result = attendanceService.updateAttendance(ayear, amonth, alatecome, aearlyleave, workovertime, aleave, wovertime, hovertime, aid);
+        if ("SUCCESS".equals(result)) {
+            return JacksonUtil.objectToJson("SUCCESS");
+        } else {
+            return JacksonUtil.objectToJson("FAIL");
+        }
+    }
+
+    @RequestMapping(value = "deleteAttendance", method = RequestMethod.DELETE)
+    public String deleteAttendance(String aid) {
+        String result = attendanceService.deleteAttendance(aid);
+        if ("SUCCESS".equals(result)) {
+            return JacksonUtil.objectToJson("SUCCESS");
+        } else {
+            return JacksonUtil.objectToJson("FAIL");
+        }
+    }
+
+    @RequestMapping(value = "searchAttendance", method = RequestMethod.GET)
+    public String searchAttendance(String uempid, String uempname, Integer ayear, Integer amonth) {
+        List<Attendance> attendances = attendanceService.searchAttendance(uempid, uempname, ayear, amonth);
+        return JacksonUtil.objectToJson(attendances);
+    }
 }

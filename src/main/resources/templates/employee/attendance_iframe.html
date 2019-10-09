@@ -11,7 +11,7 @@
     <div class="layui-form-item">
         <label class="layui-form-label">员工工号</label>
         <div class="layui-input-block">
-            <select name="uempid" lay-verify="" lay-search>
+            <select id="employee_list" name="uempid" lay-verify="" lay-search lay-filter="employee_list">
                 <option value="">请搜索选择员工工号</option>
             </select>
         </div>
@@ -19,8 +19,8 @@
     <div id="username" class="layui-form-item">
         <label class="layui-form-label">员工姓名</label>
         <div class="layui-input-block">
-            <input type="text" name="uempname" required lay-verify="required" placeholder="员工姓名"
-                   autocomplete="off" class="layui-input">
+            <input id="employee_name" type="text" name="uempname" required lay-verify="required" placeholder="员工姓名"
+                   autocomplete="off" class="layui-input" disabled="true">
         </div>
     </div>
     <div class="layui-form-item">
@@ -58,9 +58,9 @@
             success: function (res) {
                 console.log(res);
                 $.each(res, function (index, item) {
-                    $('#dept_list').append(new Option(item.uempid, item.uempname));// 下拉菜单里添加元素
-                    layui.form.render('select');
+                    $('#employee_list').append(new Option(item.uempid, item.uempname));// 下拉菜单里添加元素
                 });
+                layui.form.render('select');
             }
         });
     });
@@ -73,7 +73,7 @@
                 type:"post",
                 url:"/pm/attendance/addAttendance",
                 data : {
-                    uempid : data.field.uempid,
+                    uempid : $("#employee_list option:selected").text(),
                     uempname : data.field.uempname
                 },
                 datatype: "json",
@@ -87,7 +87,7 @@
                         parent.layer.close(parent.layer.getFrameIndex(window.name));
                     } else {
                         parent.layer.alert('新增成功', {icon: 1});
-                        parent.layui.table.reload('staff_table', {
+                        parent.layui.table.reload('attendance_table', {
                             url: '/pm/attendance/getAllAttendance'
                         });
                         parent.layer.close(parent.layer.getFrameIndex(window.name));
@@ -96,7 +96,12 @@
             });
             return false;
         });
+
+        form.on('select(employee_list)', function(data){
+            $("#employee_name").attr('value', data.value);
+        });
     });
+
     layui.use('laydate', function(){
         var laydate = layui.laydate;
         //执行一个laydate实例

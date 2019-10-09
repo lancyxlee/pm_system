@@ -115,8 +115,8 @@
                 console.log(res);
                 $.each(res, function (index, item) {
                     $('#dept_list').append(new Option(item.deptname, item.did));// 下拉菜单里添加元素
-                    layui.form.render('select');
                 });
+                layui.form.render('select');
             }
         });
         if (type === "2") {
@@ -140,8 +140,8 @@
                     console.log(document.getElementById("dept_list"));
                     console.log(res.deptnum);
                     //document.getElementById("dept_list").value = res.deptnum;
-                    //$("#dept_list").val(res.deptnum);
-                    var time = new Date(row.startdate);
+                    $("#dept_list").val(res.deptnum);
+                    var time = new Date(res.startdate);
                     var day = time.getDate();
                     if (time.getDate() < 10)
                         day = "0" + time.getDate();

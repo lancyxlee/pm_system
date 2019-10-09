@@ -26,36 +26,17 @@
 <div class="main_tabbor">
 	<!--搜索区域-->
 	<div style="text-align: left; padding: 20px 30px 0 30px">
-		员工姓名：<input type="text" class="search_bar" id="empName" placeholder="请输入员工姓名"  name="empName" style="padding-left: 10px"/>
-		<span style="margin-left: 10px">员工工号：</span><input type="text" class="search_bar" id="empId" placeholder="请输入员工工号" name="empId" style="padding-left: 10px"/>
-		<input id="search" class="search_btn" style="background-color: #2B7FDE; margin-left: 15px" type="button" value="查询"/>
+		员工工号：<input type="text" class="search_bar" id="empId" placeholder="请输入员工工号"  name="empId" />
+		<span style="margin-left: 10px">员工姓名：</span><input type="text" class="search_bar" id="empName" placeholder="请输入员工姓名" name="empName" />
+		<span style="margin-left: 10px">年份：</span><input type="text" class="search_bar" id="year" placeholder="请输入年份" name="year" style="width: 80px"/>
+		<span style="margin-left: 10px">月份：</span><input type="text" class="search_bar" id="month" placeholder="请输入月份" name="month" style="width: 80px"/>
+		<input id="search" class="search_btn" style="background-color: #2B7FDE; margin-left: 15px;font-size: 14px" type="button" value="查询"/>
 		<input id="add" class="search_btn" style="background-color: #2B7FDE;float: right;" type="button" value="新增"/>
 	</div>
 	<!--表单区域-->
-	<div style="height: 4px; background-color: #2B7FDE; margin: 20px 30px -10px 30px;"></div>
+	<div style="height: 4px; background-color: #2B7FDE; margin: 20px 30px -20px 30px;"></div>
 	<div style="margin: 0 30px 0 30px">
-		<table class="layui-table" lay-data="{height: 'full-180', url:'/pm/attendance/getAllAttendance', type:'json', page: true">
-			<thead>
-			<tr>
-				<th lay-data="{field:'username', align: 'center'}" rowspan="2">序号</th>
-				<th lay-data="{field:'uempid', align: 'center'}" rowspan="2">员工工号</th>
-				<th lay-data="{field:'uempname', align: 'center'}" rowspan="2">员工姓名</th>
-				<th lay-data="{field:'ayear', align: 'center', edit: 'number'}" rowspan="2">年份</th>
-				<th lay-data="{field:'amonth', align: 'center', edit: 'number'}" rowspan="2">月份</th>
-				<th lay-data="{field:'alatecome', align: 'center', edit: 'number'}" rowspan="2">迟到次数</th>
-				<th lay-data="{field:'aearlycome', align: 'center', edit: 'number'}" rowspan="2">早退次数</th>
-				<th lay-data="{align:'center'}" colspan="3">加班次数</th>
-				<th lay-data="{field:'aleave', align: 'center', edit: 'number'}" rowspan="2">请假次数</th>
-				<th lay-data="{field:'bonusres', align: 'center', edit: 'number'}" rowspan="2">奖罚结果</th>
-				<th lay-data="{fixed: 'right', align: 'center', toolbar: '#barDemo'}" rowspan="2">操作</th>
-			</tr>
-			<tr>
-				<th lay-data="{field:'workovertime', align: 'center', edit: 'number'}">工作日</th>
-				<th lay-data="{field:'wovertime', align: 'center', edit: 'number'}">双休日</th>
-				<th lay-data="{field:'hovertime', align: 'center', edit: 'number'}">国定假日</th>
-			</tr>
-			</thead>
-		</table>
+		<table id="attendance_table" class="layui-table" lay-filter="test"></table>
 	</div>
 	<div style="height: 15px; background-color: #FFFFFF; margin: 0 30px 0 30px"></div>
 </div>
@@ -63,12 +44,147 @@
 <script src="../layer/layer.js"></script>
 <script src="../layui/layui.js"></script>
 <script type="text/html" id="barDemo">
-	<a lay-event="edit" style="color: #2BAEDE; font-size: 14px">编辑</a>
 	<a lay-event="del" style="color: #DE2B2B; font-size: 14px">删除</a>
 </script>
 <script>
 	layui.use('table', function () {
 		var table = layui.table;
+		table.render({
+			elem: '#attendance_table'
+			, url: '/pm/attendance/getAllAttendance' //数据接口
+			, method: 'get'
+			, height: 'full-180'
+			, page: {theme:'#2B7FDE'} //开启分页
+			, parseData:function(res) {
+				return {
+					"code": 0,
+					"msg": "",
+					"count": res.length,
+					"data":res
+				}
+			}
+			, cols: [[ //表头
+				{type: 'numbers', title: '序号', align: 'center', rowspan: 2}
+				, {field: 'uempid', title: '员工工号', align: 'center', rowspan: 2}
+				, {field: 'uempname', title: '员工姓名', align: 'center', rowspan: 2}
+				, {field: 'ayear', title: '年份', sort: true, align: 'center', rowspan: 2, edit: 'text'}
+				, {field: 'amonth', title: '月份', sort: true, align: 'center', rowspan: 2, edit: 'text'}
+				, {field: 'alatecome', title: '迟到次数', sort: true, align: 'center', rowspan: 2, edit: 'text'}
+				, {field: 'aearlyleave', title: '早退次数', sort: true, align: 'center', rowspan: 2, edit: 'text'}
+				, {title: '加班次数', sort: true, align: 'center', colspan:'3'}
+				, {field: 'aleave', title: '请假次数', sort: true, align: 'center', rowspan: 2, edit: 'text'}
+				, {field: 'bonusres', title: '奖罚结果', sort: true, align: 'center', rowspan: 2}
+				, {fixed: 'right', title:'操作', toolbar: '#barDemo', align: 'center', rowspan: 2}
+			], [
+				{field: 'workovertime', title: '工作日', align: 'center', edit: 'text'}
+				, {field: 'wovertime', title: '双休日', align: 'center', edit: 'text'}
+				, {field: 'hovertime', title: '国定假日', align: 'center', edit: 'text'}
+			]]
+		});
+		//监听单元格编辑
+		table.on('edit(test)', function(obj){
+			var value = obj.value; //得到修改后的值
+			var field = obj.field; //得到字段
+			var data = obj.data;
+			var jug = true;
+			console.log(obj);
+			if(isNormalInteger(value)){
+				if (field === "ayear") {
+					var date = new Date().getFullYear();
+					if (value > date + 10 || value < date - 10) {
+						layer.alert('请输入当前年份前后不超过10年的年份', {icon: 2});
+						jug = false
+					}
+				} else if(field === "amonth") {
+					if (value > 12 || value < 1) {
+						layer.alert('请输入正确的月份', {icon: 2});
+						jug = false
+					}
+				} else {
+					if (value > 100 || value < 0){
+						layer.alert('请输入正确数字', {icon: 2});
+						jug = false
+					}
+				}
+				if (jug) {
+					$.ajax({
+						type:"post",
+						url:"/pm/attendance/updateAttendance",
+						data : {
+							ayear : data.ayear,
+							amonth : data.amonth,
+							alatecome : data.alatecome,
+							aearlyleave : data.aearlyleave,
+							workovertime : data.workovertime,
+							aleave : data.aleave,
+							wovertime : data.wovertime,
+							hovertime : data.hovertime,
+							aid : data.aid
+						},
+						datatype: "json",
+						error: function(){
+							//请求出错处理
+							layer.alert('出错了，请与管理员联系！', {icon: 2});
+						},
+						success:function(res){
+							if (res === "FAIL") {
+								layer.alert('编辑失败', {icon: 2});
+								table.reload('attendance_table', {
+									url: '/pm/attendance/getAllAttendance'
+								});
+							}
+						}
+					});
+				} else {
+					table.reload('attendance_table', {
+						url: '/pm/attendance/getAllAttendance'
+					});
+				}
+			} else {
+				layer.alert('请输入正整数', {icon: 2});
+				table.reload('attendance_table', {
+					url: '/pm/attendance/getAllAttendance'
+				});
+			}
+		});
+		//监听行工具事件
+		table.on('tool(test)', function(obj){
+			// 操作栏-删除按钮事件
+			//询问框
+			layer.confirm('是否确实删除？'
+					, {btn: ['确定','取消'], icon: 0
+					}, function(){
+						//确定按钮事件
+						$.ajax({
+							type:"delete",
+							url:"/pm/attendance/deleteAttendance",
+							data : {
+								aid : obj.data.aid
+							},
+							datatype: "json",
+							error: function(){
+								//请求出错处理
+								layer.alert('出错了，请与管理员联系！', {icon: 2});
+							},
+							success:function(res){
+								if (res === "FAIL") {
+									parent.layer.alert('删除失败', {icon: 2});
+									layer.close(parent.layer.getFrameIndex(window.name));
+								} else {
+									layer.alert('删除成功', {icon: 1});
+									table.reload('attendance_table', {
+										url: '/pm/attendance/getAllAttendance'
+									});
+									layer.close(parent.layer.getFrameIndex(window.name));
+								}
+							}
+						});
+					}, function(){
+
+					});
+
+
+		});
 	});
 	$("#add").click(function(){
 		layer.ready(function(){
@@ -84,6 +200,26 @@
 			});
 		});
 	});
+    // 查询按钮事件
+    $("#search").click(function(){
+        var empId = $("#empId").val();
+        var empName = $("#empName").val();
+        var year = $("#year").val();
+        var month = $("#month").val();
+        layui.table.reload('attendance_table', {
+            url: '/pm/attendance/searchAttendance'
+            ,where: {
+                uempid: empId
+                ,uempname: empName
+                ,ayear: year
+                ,amonth: month
+            }
+        });
+    });
+	function isNormalInteger(str) {
+		var n = Math.floor(Number(str));
+		return n !== Infinity && String(n) === str && n >= 0;
+	}
 </script>
 </body>
 </html>

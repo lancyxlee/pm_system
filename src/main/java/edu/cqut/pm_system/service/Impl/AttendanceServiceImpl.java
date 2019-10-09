@@ -42,4 +42,33 @@ public class AttendanceServiceImpl implements AttendanceService {
         }
     }
 
+    @Override
+    public String updateAttendance(Integer ayear, Integer amonth, Integer alatecome, Integer aearlyleave, Integer workovertime, Integer aleave, Integer wovertime, Integer hovertime, String aid) {
+        try {
+//            dayli = basesalary / 21.75
+//            (dayli * setworkovertime * workovertime + dayli * sethovertime * hovertime + dayli * setwovertime * wovertime) - (setlatecome * alatecome + setearlyleave * aearlyleave) - (dayli * aleave)
+            attendanceDao.updateAttendance(ayear, amonth, alatecome, aearlyleave, workovertime, aleave, wovertime, hovertime, aid);
+            return "SUCCESS";
+        } catch (Exception e) {
+            System.out.println(e);
+            return "FAIL";
+        }
+    }
+
+    @Override
+    public String deleteAttendance(String aid) {
+        try {
+            attendanceDao.deleteAttendance(aid);
+            return "SUCCESS";
+        } catch (Exception e) {
+            System.out.println(e);
+            return "FAIL";
+        }
+    }
+
+    @Override
+    public List<Attendance> searchAttendance(String uempid, String uempname, Integer ayear, Integer amonth) {
+        return attendanceDao.searchAttendance(uempid, uempname, ayear, amonth);
+    }
+
 }

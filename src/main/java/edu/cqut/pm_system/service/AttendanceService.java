@@ -13,4 +13,7 @@ public interface AttendanceService {
 
     List<Attendance> getAllAttendance();
     String addAttendance(Attendance attendance);
+    String updateAttendance(Integer ayear, Integer amonth, Integer alatecome, Integer aearlyleave, Integer workovertime, Integer aleave, Integer wovertime, Integer hovertime, String aid);
+    String deleteAttendance(String aid);
+    List<Attendance> searchAttendance(String uempid, String uempname, Integer ayear, Integer amonth);
 }

@@ -19,7 +19,7 @@
 		<result column="hovertime" property="hovertime" jdbcType="INTEGER" />
 	</resultMap>
 
-	<select id="getAllDeptAttendance" resultMap="AttendanceMap">
+	<select id="getAllAttendance" resultMap="AttendanceMap">
 		SELECT
 			attendance.aid,
 			attendance.uempid,
@@ -38,9 +38,67 @@
 			attendance
     </select>
 
+	<update id="updateAttendance">
+		UPDATE attendance
+		<trim prefix="set" suffixOverrides=",">
+			<if test="ayear != null">ayear = #{ayear},</if>
+			<if test="amonth != null">amonth = #{amonth},</if>
+			<if test="alatecome != null">alatecome = #{alatecome},</if>
+			<if test="aearlyleave != null">aearlyleave=#{aearlyleave},</if>
+			<if test="workovertime != null">workovertime=#{workovertime},</if>
+			<if test="aleave != null">aleave=#{aleave},</if>
+			<if test="wovertime != null">wovertime=#{wovertime},</if>
+			<if test="hovertime != null">hovertime=#{hovertime},</if>
+		</trim>
+		<where>
+			attendance.aid = #{aid}
+		</where>
+    </update>
+
 	<insert id="addAttendance" parameterType="edu.cqut.pm_system.entity.Attendance">
         INSERT INTO attendance
         VALUES
 	    (#{aid, jdbcType=VARCHAR}, #{uempid, jdbcType=VARCHAR}, #{uempname, jdbcType=VARCHAR}, #{ayear, jdbcType=INTEGER}, #{amonth, jdbcType=INTEGER}, #{alatecome, jdbcType=INTEGER}, #{aearlyleave, jdbcType=INTEGER}, #{aearlycome, jdbcType=INTEGER}, #{workovertime, jdbcType=INTEGER}, #{aleave, jdbcType=INTEGER}, #{bonusres, jdbcType=DOUBLE}, #{wovertime, jdbcType=INTEGER}, #{hovertime, jdbcType=INTEGER})
     </insert>
+
+	<delete id="deleteAttendance">
+		DELETE
+		FROM
+			attendance
+		WHERE
+			attendance.aid = #{aid}
+	</delete>
+
+	<select id="searchAttendance" resultMap="AttendanceMap">
+		SELECT
+		attendance.aid,
+		attendance.uempid,
+		attendance.uempname,
+		attendance.ayear,
+		attendance.amonth,
+		attendance.alatecome,
+		attendance.aearlyleave,
+		attendance.aearlycome,
+		attendance.workovertime,
+		attendance.aleave,
+		attendance.bonusres,
+		attendance.wovertime,
+		attendance.hovertime
+		FROM
+		attendance
+		WHERE
+		1 = 1
+		<if test="uempid != null and uempid != ''">
+			AND attendance.uempid like CONCAT('%',#{uempid},'%')
+		</if>
+		<if test="uempname != null and uempname != ''">
+			AND attendance.uempname like CONCAT('%',#{uempname},'%')
+		</if>
+		<if test="ayear != null">
+			AND attendance.ayear = #{ayear}
+		</if>
+		<if test="amonth != null">
+			AND attendance.amonth = #{amonth}
+		</if>
+	</select>
 </mapper>
