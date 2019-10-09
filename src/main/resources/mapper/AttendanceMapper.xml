@@ -73,6 +73,7 @@
 			<if test="aleave != null">aleave=#{aleave},</if>
 			<if test="wovertime != null">wovertime=#{wovertime},</if>
 			<if test="hovertime != null">hovertime=#{hovertime},</if>
+			<if test="bonusres != null">bonusres=#{bonusres},</if>
 		</trim>
 		<where>
 			attendance.aid = #{aid}
@@ -124,5 +125,18 @@
 		<if test="amonth != null">
 			AND attendance.amonth = #{amonth}
 		</if>
+	</select>
+
+	<select id="getEmpBasesalary" resultType="java.lang.Double">
+		SELECT
+		salary_set.basesalary
+		FROM
+		salary_set
+		LEFT JOIN attendance ON attendance.aid = #{aid}
+		LEFT JOIN `user` ON `user`.uid = attendance.uempid
+		LEFT JOIN employee ON employee.uempid = attendance.uempid
+		WHERE
+		salary_set.deptnum = employee.deptnum
+		AND salary_set.role = `user`.role
 	</select>
 </mapper>

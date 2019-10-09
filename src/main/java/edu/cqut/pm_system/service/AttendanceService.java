@@ -18,4 +18,5 @@ public interface AttendanceService {
     String deleteAttendance(String aid);
     List<Attendance> searchAttendance(String uempid, String uempname, Integer ayear, Integer amonth);
     AttendanceSet getAllAttendanceSet();
+    Double getEmpBasesalary(String aid);
 }

@@ -67,7 +67,7 @@ function loadMenu() {
         var jsonObj = $.parseJSON(json);
     } else {
         // jquery的方法
-        var jsonObj = $.parseJSON(ordinary);
+        var jsonObj = $.parseJSON(json);
     }
 
     var msg = [];

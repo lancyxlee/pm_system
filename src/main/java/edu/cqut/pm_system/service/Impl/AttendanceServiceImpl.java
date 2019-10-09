@@ -3,6 +3,8 @@ package edu.cqut.pm_system.service.Impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 
 import edu.cqut.pm_system.dao.AttendanceDao;
@@ -48,8 +50,19 @@ public class AttendanceServiceImpl implements AttendanceService {
         try {
 //            dayli = basesalary / 21.75
 //            (dayli * setworkovertime * workovertime + dayli * sethovertime * hovertime + dayli * setwovertime * wovertime) - (setlatecome * alatecome + setearlyleave * aearlyleave) - (dayli * aleave)
+            Double basesalary = attendanceDao.getEmpBasesalary(aid);
+            Double dailyWage = basesalary / 21.75;
             AttendanceSet attendanceSet = attendanceDao.getAllAttendanceSet();
-            attendanceDao.updateAttendance(ayear, amonth, alatecome, aearlyleave, workovertime, aleave, wovertime, hovertime, aid);
+            Double setworkovertime = attendanceSet.getSetworkovertime();
+            Double sethovertime = attendanceSet.getSethovertime();
+            Double setwovertime = attendanceSet.getSetwovertime();
+            Double setlatecome = attendanceSet.getSetlatecome();
+            Double setearlyleave = attendanceSet.getSetearlyleave();
+            Double bonusres = (dailyWage * setworkovertime * workovertime + dailyWage * sethovertime * hovertime + dailyWage * setwovertime * wovertime) - (setlatecome * alatecome + setearlyleave * aearlyleave) - (dailyWage * aleave);
+            //四舍五入保留两位小数
+            BigDecimal bigDecimal = new BigDecimal(bonusres).setScale(2, RoundingMode.HALF_UP);
+            bonusres = bigDecimal.doubleValue();
+            attendanceDao.updateAttendance(ayear, amonth, alatecome, aearlyleave, workovertime, aleave, wovertime, hovertime, bonusres, aid);
             return "SUCCESS";
         } catch (Exception e) {
             System.out.println(e);
@@ -76,6 +89,11 @@ public class AttendanceServiceImpl implements AttendanceService {
     @Override
     public AttendanceSet getAllAttendanceSet() {
         return attendanceDao.getAllAttendanceSet();
+    }
+
+    @Override
+    public Double getEmpBasesalary(String aid) {
+        return attendanceDao.getEmpBasesalary(aid);
     }
 
 }

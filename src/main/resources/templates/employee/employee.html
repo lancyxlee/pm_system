@@ -129,10 +129,10 @@
 						success:function(res){
 							if (res === "FAIL") {
 								layer.alert('编辑失败', {icon: 2});
-								table.reload('attendance_table', {
-									url: '/pm/attendance/getAllAttendance'
-								});
 							}
+							table.reload('attendance_table', {
+								url: '/pm/attendance/getAllAttendance'
+							});
 						}
 					});
 				} else {

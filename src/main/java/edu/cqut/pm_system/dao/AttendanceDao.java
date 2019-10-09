@@ -16,8 +16,9 @@ import edu.cqut.pm_system.entity.DeptSalary;
 public interface AttendanceDao {
     List<Attendance> getAllAttendance();
     void addAttendance(Attendance attendance);
-    void updateAttendance(Integer ayear, Integer amonth, Integer alatecome, Integer aearlyleave, Integer workovertime, Integer aleave, Integer wovertime, Integer hovertime, String aid);
+    void updateAttendance(Integer ayear, Integer amonth, Integer alatecome, Integer aearlyleave, Integer workovertime, Integer aleave, Integer wovertime, Integer hovertime, Double bonusres, String aid);
     void deleteAttendance(String aid);
     List<Attendance> searchAttendance(String uempid, String uempname, Integer ayear, Integer amonth);
     AttendanceSet getAllAttendanceSet();
+    Double getEmpBasesalary(String aid);
 }
