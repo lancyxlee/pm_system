@@ -22,10 +22,9 @@
 <div style="height: 100%;margin-top: 20px;">
     <div id="echarts" style="height:300px; background-color: #FFFFFF; margin-bottom: 20px"></div>
     <div id="card_div" class="layui-row layui-col-space10">
-        <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
         <div id="add" class="layui-col-md2">
             <div style="height:200px; background-color: #FFFFFF; color: #333333; text-align: center">
-                <p style="padding-top: 50px"><img width="70px" height="70px" src="../images/add.png" alt=""></p>
+                <p style="padding-top: 40px"><img width="70px" height="70px" src="../images/add.png" alt=""></p>
                 <p style="margin-top: 20px"><strong style="font-size: 16px">创建目标</strong></p>
                 <p style="margin-top: 5px; font-size: 14px"> 请尽量在月初1-5号提交自己的目标</p>
             </div>
@@ -37,6 +36,7 @@
 <script src="../layer/layer.js"></script>
 <script src="../layui/layui.js"></script>
 <script type="text/javascript">
+    var type = 2;
     // 基于准备好的dom，初始化echarts实例
     var myChart = echarts.init(document.getElementById('echarts'));
 
@@ -62,6 +62,66 @@
     // 使用刚指定的配置项和数据显示图表。
     myChart.setOption(option);
 
+    $(function(){
+        $(function() {
+            $.ajax({
+                url: "/pm/getPermission",
+                type: "get",
+                async: false,//使用同步的方式,true为异步方式
+                error: function (res) {
+                    console.log(res);
+                    layer.alert('权限认证有误', {icon: 2});
+                },
+                success: function (res) {
+                    type = eval(res);
+                    console.log(type);
+                    if (type !== 2) {
+                        $("#add").remove();
+                    }
+                }
+            });
+        });
+        $.ajax({
+            type: "get",
+            url: "/pm/performance/getWorkplan",
+            dataType: "json",
+            error: function () {
+                layer.alert('出错了，请与管理员联系！', {icon: 2});
+            },
+            success: function (res) {
+                console.log(res);
+                for (var i = 0; i < res.length; i++) {
+                    var index = res[i];
+                    var new_div = document.createElement("div");
+                    var id = index.wid;
+                    var time = new Date(index.date);
+                    var date = time.getFullYear() + "年" + (time.getMonth() + 1) + "月目标";
+                    var plan = index.dailyplan;
+                    console.log(date + "________" + plan);
+                    new_div.id = id;
+                    new_div.className = "layui-col-md2";
+                    if (index.completion === "未完成") {
+                        new_div.innerHTML = "<div><div style=\"height:200px; background-color: #FFFFFF; color: #333333;text-align: left\"><p style=\"padding: 30px 0 0 40px;\"><img width=\"58px\" height=\"29px\" src=\"../images/unfinished.png\" alt=\"\"></p><p style=\"margin: 20px 0 0 40px\"><strong style=\"font-size: 16px\">" + date + "</strong></p><p style=\"margin: 15px 0 0 40px; font-size: 14px\">" + plan +"</p></div></div>";
+                    } else {
+                        new_div.innerHTML = "<div><div style=\"height:200px; background-color: #FFFFFF; color: #333333;text-align: left\"><p style=\"padding: 30px 0 0 40px;\"><img width=\"58px\" height=\"29px\" src=\"../images/finished.png\" alt=\"\"></p><p style=\"margin: 20px 0 0 40px\"><strong style=\"font-size: 16px\">" + date + "</strong></p><p style=\"margin: 15px 0 0 40px; font-size: 14px\">" + plan + "</p></div></div>";
+                    }
+                    document.getElementById("card_div").appendChild(new_div);
+                    $("#" + id + "").click(function() {
+                        var id = $(this).attr("id");
+                        layer.ready(function(){
+                            layer.open({
+                                type: 2,
+                                title: '工作计划',
+                                shadeClose: true,
+                                area: ['500px', '750px'],
+                                content: 'aim_iframe.html?type=2&wid=' + id//type=1 修改操作
+                            });
+                        });
+                    });
+                }
+            }
+        });
+    });
     $("#add").click(function(){
         layer.ready(function(){
             layer.open({
@@ -69,7 +129,7 @@
                 title: '工作计划',
                 shadeClose: true,
                 area: ['500px', '750px'],
-                content: 'aim_iframe.html?type=1'//type=1 --操作
+                content: 'aim_iframe.html?type=1'//type=1 新增操作
             });
         });
     });

@@ -20,7 +20,7 @@
     </div>
 </div>
 
-<form class="layui-form" action="">
+<form id="form" class="layui-form" action="">
     <div class="layui-form-item layui-form-text">
         <label class="layui-form-label">工作计划</label>
         <div class="layui-input-block">
@@ -30,35 +30,34 @@
     <div id="status" class="layui-form-item">
         <label class="layui-form-label">任务情况</label>
         <div class="layui-input-block">
-            <input type="radio" name="status" value="0" title="未完成" checked>
-            <input type="radio" name="status" value="1" title="已完成">
+            <input type="radio" name="status" value="未完成" title="未完成" lay-filter="test" checked>
+            <input type="radio" name="status" value="已完成" title="已完成" lay-filter="test">
         </div>
     </div>
     <div id="self" class="layui-form-item">
         <label class="layui-form-label">自我评分</label>
         <div class="layui-input-block">
-            <input type="number" name="name" required lay-verify="required" placeholder="请输入自我评分"
+            <input type="number" name="self" required lay-verify="required" placeholder="请输入自我评分"
                    autocomplete="off" class="layui-input">
         </div>
     </div>
     <div id="manager" class="layui-form-item">
         <label class="layui-form-label">经理评分</label>
         <div class="layui-input-block">
-            <input type="number" name="name" required lay-verify="required" placeholder="请输入经理评分"
+            <input type="number" name="manager" required lay-verify="required" placeholder="请输入经理评分"
                    autocomplete="off" class="layui-input">
         </div>
     </div>
     <div id="administrator" class="layui-form-item">
         <label class="layui-form-label">管理员评分</label>
         <div class="layui-input-block">
-            <input type="number" name="name" required lay-verify="required" placeholder="请输入管理员评分"
+            <input type="number" name="administrator" required lay-verify="required" placeholder="请输入管理员评分"
                    autocomplete="off" class="layui-input">
         </div>
     </div>
-    <div class="layui-form-item">
+    <div id="sub" class="layui-form-item">
         <div class="layui-input-block">
             <button class="layui-btn" lay-submit lay-filter="formDemo">提交</button>
-            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
         </div>
     </div>
 </form>
@@ -68,7 +67,23 @@
 <script>
     var type;
     var id;
+    var jug = true;
+    var role = 2;
     $(function(){
+        $(function() {
+            $.ajax({
+                url: "/pm/getPermission",
+                type: "get",
+                async: false,//使用同步的方式,true为异步方式
+                error: function (res) {
+                    console.log(res);
+                    layer.alert('权限认证有误', {icon: 2});
+                },
+                success: function (res) {
+                    role = eval(res);
+                }
+            });
+        });
         parent.layer.iframeAuto(parent.layer.getFrameIndex(window.name));
         var url = location.search; //这一条语句获取了包括问号开始到参数的最后，不包括前面的路径
         console.log(url);
@@ -79,16 +94,19 @@
             s[pa[i].split("=")[0]] = unescape(pa[i].split("=")[1]);
         }
         type = s.type + "";
-        id = s.tid + "";
+        id = s.wid + "";
         if(type === "1") {
             $("#status").remove();
+            $("#self").remove();
+            $("#manager").remove();
+            $("#administrator").remove();
             parent.layer.iframeAuto(parent.layer.getFrameIndex(window.name));
         } else if (type === "2") {
             $.ajax({
                 type: "get",
-                url: "/pm/task/getTaskFromId",
+                url: "/pm/performance/getPlanFromId",
                 data : {
-                    tid : id
+                    wid : id
                 },
                 dataType: "json",
                 error: function () {
@@ -96,16 +114,36 @@
                 },
                 success: function (res) {
                     console.log(res);
-                    $("input[name='name']").attr('value',res.name);
-                    $("textarea[name='detail']").attr('value',res.detail);
-                    $("#dept_list").val(res.did);
-                    var time = new Date(res.deadline);
-                    var day = time.getDate();
-                    if (time.getDate() < 10)
-                        day = "0" + time.getDate();
-                    var deadline = time.getFullYear() + "-" + (time.getMonth() + 1) + "-" + day;
-                    $("input[name='deadline']").attr('value', deadline);
-                    $("input:radio[name='status'][value='" + res.status + "']").attr('checked','true');
+                    $("textarea[name='detail']").val(res.dailyplan);
+                    $("input:radio[name='status'][value='" + res.completion + "']").attr('checked','true');
+                    if(role === 2) {
+                        $("input[name='self']").attr("disabled","disabled");
+                        $("#manager").remove();
+                        $("#administrator").remove();
+                    } else if(role === 1) {
+                        $("#status").remove();
+                        $("#administrator").remove();
+                        $("textarea[name='detail']").attr('readonly', true);
+                        $("input[name='self']").attr("disabled","disabled");
+                    } else {
+                        $("#status").remove();
+                        $("textarea[name='detail']").attr('readonly', true);
+                        $("input[name='self']").attr("disabled","disabled");
+                        $("input[name='manager']").attr("disabled","disabled");
+                    }
+                    if (res.self_rating != null) {
+                        $("#status").remove();
+                        $("textarea[name='detail']").attr('readonly', true);
+                        $("input[name='self']").attr("disabled","disabled");
+                    }
+                    if (res.supv_rating != null)
+                        $("input[name='manager']").attr("disabled","disabled");
+                    if (res.adst_rating != null)
+                        $("input[name='administrator']").attr("disabled","disabled");
+                    $("input[name='self']").attr('value',res.self_rating);
+                    $("input[name='manager']").attr('value',res.supv_rating);
+                    $("input[name='administrator']").attr('value',res.adst_rating);
+                    parent.layer.iframeAuto(parent.layer.getFrameIndex(window.name));
                 }
             });
         }
@@ -118,12 +156,9 @@
             if (type === "1") {
                 $.ajax({
                     type:"post",
-                    url:"/pm/task/addTask",
+                    url:"/pm/performance/addPerformance",
                     data : {
-                        name : data.field.name,
-                        detail : data.field.detail,
-                        did : data.field.did,
-                        deadline : data.field.deadline
+                        dailyplan : data.field.detail,
                     },
                     datatype: "json",
                     error: function(){
@@ -136,9 +171,7 @@
                             parent.layer.close(parent.layer.getFrameIndex(window.name));
                         } else {
                             parent.layer.alert('新增成功', {icon: 1});
-                            parent.layui.table.reload('task_table', {
-                                url: '/pm/task/getAllTask'
-                            });
+                            parent.location.reload();
                             parent.layer.close(parent.layer.getFrameIndex(window.name));
 
                         }
@@ -147,14 +180,14 @@
             } else {
                 $.ajax({
                     type:"post",
-                    url:"/pm/task/updateTask",
+                    url:"/pm/performance/updatePerformance",
                     data : {
-                        name : data.field.name,
-                        detail : data.field.detail,
-                        did : data.field.did,
-                        deadline : data.field.deadline,
-                        status : data.field.status,
-                        tid : id
+                        dailyplan : data.field.detail,
+                        self_rating : data.field.self,
+                        completion : data.field.status,
+                        supv_rating : data.field.manager,
+                        adst_rating : data.field.administrator,
+                        wid : id
                     },
                     datatype: "json",
                     error: function(){
@@ -167,15 +200,22 @@
                             parent.layer.close(parent.layer.getFrameIndex(window.name));
                         } else {
                             parent.layer.alert('编辑成功', {icon: 1});
-                            parent.layui.table.reload('task_table', {
-                                url: '/pm/task/getAllTask'
-                            });
+                            parent.location.reload();
                             parent.layer.close(parent.layer.getFrameIndex(window.name));
                         }
                     }
                 });
             }
             return false;
+        });
+        form.on('radio(test)', function(data) {
+            var value = data.value;
+            if(value === "已完成"){
+                $("input[name='self']").removeAttr("disabled");
+            } else {
+                $("input[name='self']").val("");
+                $("input[name='self']").attr("disabled","disabled");
+            }
         });
     });
 </script>

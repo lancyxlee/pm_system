@@ -20,6 +20,16 @@
 		<result column="grade" property="grade" jdbcType="INTEGER" />
         <result column="bonus_set" property="bonus_set" jdbcType="DOUBLE" />
 	</resultMap>
+	<resultMap id="WorkplanMap" type="edu.cqut.pm_system.entity.Workplan">
+		<id column="wid" property="wid" jdbcType="VARCHAR" />
+		<result column="uid" property="uid" jdbcType="VARCHAR" />
+		<result column="date" property="date" jdbcType="TIMESTAMP" />
+		<result column="dailyplan" property="dailyplan" jdbcType="VARCHAR" />
+		<result column="completion" property="completion" jdbcType="VARCHAR" />
+		<result column="supv_rating" property="supv_rating" jdbcType="DOUBLE" />
+		<result column="self_rating" property="self_rating" jdbcType="DOUBLE" />
+		<result column="adst_rating" property="adst_rating" jdbcType="DOUBLE" />
+	</resultMap>
 
 	<select id="getAllPerformanceSet" resultMap="PerformanceSetMap">
 		SELECT
@@ -46,6 +56,108 @@
 			perfomance
     </select>
 
+	<select id="getPlanFromId" resultType="java.util.HashMap">
+		SELECT
+			workplan.dailyplan,
+			workplan.`completion`,
+			performance.self_rating,
+			performance.supv_rating,
+			performance.adst_rating,
+			`user`.role
+		FROM
+			performance
+		LEFT JOIN workplan ON workplan.wid = #{wid}
+		LEFT JOIN `user` ON workplan.uid = `user`.uid
+		WHERE
+			performance.pid = #{wid}
+    </select>
+
+	<select id="getWorkplanOrdinary" resultMap="WorkplanMap">
+		SELECT
+			workplan.wid,
+			workplan.date,
+			workplan.dailyplan,
+			workplan.`completion`
+		FROM
+			workplan
+		WHERE
+			workplan.uid = #{uid}
+		ORDER BY workplan.date DESC
+    </select>
+
+	<select id="getWorkplanManager" resultMap="WorkplanMap">
+		SELECT
+			workplan.wid,
+			workplan.date,
+			workplan.dailyplan,
+			workplan.`completion`
+		FROM
+			workplan
+		LEFT JOIN employee a ON a.uid = #{uid}
+		LEFT JOIN employee b ON a.deptnum = b.deptnum
+		WHERE
+			b.uid = workplan.uid
+		AND workplan.self_rating IS NOT NULL
+    </select>
+
+	<select id="getWorkplanAdmin" resultMap="WorkplanMap">
+		SELECT
+			workplan.wid,
+			workplan.date,
+			workplan.dailyplan,
+			workplan.`completion`
+		FROM
+			workplan
+		WHERE
+			workplan.supv_rating IS NOT NULL AND workplan.self_rating IS NOT NULL
+    </select>
+
+	<select id="getBounsSet" resultType="java.lang.Double">
+		SELECT
+			performance_set.bonus_set
+		FROM
+			performance_set
+		WHERE
+			performance_set.grade = #{grade}
+    </select>
+
+	<insert id="addPerformance" parameterType="edu.cqut.pm_system.entity.Performance">
+        INSERT INTO performance
+        VALUES
+	    (#{pid, jdbcType=VARCHAR}, #{uid, jdbcType=VARCHAR}, #{pyear, jdbcType=INTEGER}, #{pmonth, jdbcType=INTEGER}, #{performance, jdbcType=DOUBLE}, #{grade, jdbcType=INTEGER}, #{supv_rating, jdbcType=DOUBLE}, #{self_rating, jdbcType=DOUBLE}, #{adst_rating, jdbcType=DOUBLE}, #{bonusres, jdbcType=DOUBLE})
+    </insert>
+
+	<update id="updatePerformance" parameterType="edu.cqut.pm_system.entity.Performance">
+        UPDATE performance
+		SET
+            performance.performance = #{performance, jdbcType=DOUBLE},
+            performance.grade = #{grade, jdbcType=INTEGER},
+            performance.supv_rating = #{supv_rating, jdbcType=DOUBLE},
+            performance.self_rating = #{self_rating, jdbcType=DOUBLE},
+            performance.adst_rating = #{adst_rating, jdbcType=DOUBLE},
+            performance.bonusres = #{bonusres, jdbcType=DOUBLE}
+		WHERE
+			performance.pid = #{pid, jdbcType=VARCHAR}
+    </update>
+
+	<insert id="addWorkplan" parameterType="edu.cqut.pm_system.entity.Workplan">
+        INSERT INTO workplan
+        VALUES
+	    (#{wid, jdbcType=VARCHAR}, #{uid, jdbcType=VARCHAR}, #{date, jdbcType=VARCHAR}, #{dailyplan, jdbcType=VARCHAR}, #{completion, jdbcType=VARCHAR}, #{supv_rating, jdbcType=DOUBLE}, #{self_rating, jdbcType=DOUBLE}, #{adst_rating, jdbcType=DOUBLE})
+    </insert>
+
+	<update id="updateWorkplan" parameterType="edu.cqut.pm_system.entity.Workplan">
+        UPDATE workplan
+		SET
+            workplan.dailyplan = #{dailyplan, jdbcType=VARCHAR},
+            workplan.completion = #{completion, jdbcType=VARCHAR},
+            workplan.supv_rating = #{supv_rating, jdbcType=DOUBLE},
+            workplan.self_rating = #{self_rating, jdbcType=DOUBLE},
+            workplan.adst_rating = #{adst_rating, jdbcType=DOUBLE}
+		WHERE
+			workplan.wid = #{wid, jdbcType=VARCHAR}
+    </update>
+
 	<update id="updatePerformanceSetFromId">
 		UPDATE performance_set
 		SET
@@ -53,5 +165,4 @@
 		WHERE
 			performance_set.pset_id = #{pset_id}
 	</update>
-
 </mapper>
