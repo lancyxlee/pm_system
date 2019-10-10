@@ -96,4 +96,15 @@ public class AttendanceServiceImpl implements AttendanceService {
         return attendanceDao.getEmpBasesalary(aid);
     }
 
+    @Override
+    public String updateAttendanceSet(Double setlatecome, Double setearlyleave, Double setworkovertime, Double setwovertime, Double sethovertime,String setid) {
+        try {
+            attendanceDao.updateAttendanceSet(setlatecome,setearlyleave,setworkovertime,setwovertime,sethovertime,setid);
+            return "SUCCESS";
+        } catch (Exception e) {
+            System.out.println(e);
+            return "FAIL";
+        }
+    }
+
 }

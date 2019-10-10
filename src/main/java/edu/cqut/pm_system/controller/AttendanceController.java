@@ -88,4 +88,14 @@ public class AttendanceController {
             return "FAIL";
         }
     }
+    @RequestMapping(value = "updateAttendanceSet", method = RequestMethod.POST)
+    public String updateAttendanceSet(Double setlatecome, Double setearlyleave, Double setworkovertime, Double setwovertime, Double sethovertime,String setid) {
+        String result = attendanceService.updateAttendanceSet(setlatecome, setearlyleave, setworkovertime, setwovertime, sethovertime, setid);
+        if ("SUCCESS".equals(result)) {
+            return JacksonUtil.objectToJson("SUCCESS");
+        } else {
+            return JacksonUtil.objectToJson("FAIL");
+        }
+    }
+
 }

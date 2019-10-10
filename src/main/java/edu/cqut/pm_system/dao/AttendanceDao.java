@@ -1,6 +1,7 @@
 package edu.cqut.pm_system.dao;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -21,4 +22,5 @@ public interface AttendanceDao {
     List<Attendance> searchAttendance(String uempid, String uempname, Integer ayear, Integer amonth);
     AttendanceSet getAllAttendanceSet();
     Double getEmpBasesalary(String aid);
+    void updateAttendanceSet(@Param("setlatecome")Double setlatecome,@Param("setearlyleave") Double setearlyleave,@Param("setworkovertime") Double setworkovertime,@Param("setwovertime") Double setwovertime, @Param("sethovertime")Double sethovertime,  @Param("setid")String setid);
 }

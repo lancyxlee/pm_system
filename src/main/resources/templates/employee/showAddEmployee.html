@@ -92,30 +92,22 @@
 		</tr>
 		<tr>
 			<td><div class="input">
-				<p class="input_name">早到奖励：</p>
-				<input type="text" name="earlycome" id="earlycome" placeholder="请输入早到奖励金额" class="input_box"/>
-				<span>元/次</span>
-			</div>
-			</td>
-			<td><div class="input">
 				<p class="input_name">请假惩罚：</p>
 				<input type="text" name="startdate" id="startdate" class="input_box" value="（基本工资/21.7）" disabled style="background-color: #f6f6f6"/>
 				<span>元/日</span></div>
 			</td>
-		</tr>
-		<tr>
 			<td><div class="input">
 				<p class="input_name">工作日加班：</p>
 				<input type="text" name="workovertime" id="workovertime" placeholder="请输入加班福利率" class="input_box" style="width: 250px"/>
 				<span>倍平时工资</span></div>
 			</td>
+		</tr>
+		<tr>
 			<td><div class="input">
 				<p class="input_name">双休日加班：</p>
 				<input type="text" name="wovertime" id="wovertime" placeholder="请输入加班福利率" class="input_box" style="width: 250px"/>
 				<span>倍平时工资</span></div>
 			</td>
-		</tr>
-		<tr>
 			<td><div class="input">
 				<p class="input_name">国定假日加班：</p>
 				<input type="text" name="hovertime" id="hovertime" placeholder="请输入加班福利率" class="input_box" style="width: 250px"/>
@@ -123,9 +115,97 @@
 			</td>
 		</tr>
 	</table>
-	<input class="editbutton" type="button" value="修改" style=" color: #FFFFFF;"/>
-	<input class="quitbutton" type="button" value="取消" style=" color: #2B7FDE;"/>
+	<input class="editbutton" type="button" id="editBtn" value="修改" style=" color: #FFFFFF;"/>
+	<input class="quitbutton" type="button" id="quitBtn" value="取消" style=" color: #2B7FDE;"/>
 </div>
 <div style="height:10px;"></div>
+<script src="../js/jquery-3.4.1.js"></script>
+<script src="../layer/layer.js"></script>
+<script src="../layui/layui.js"></script>
+<script type="text/javascript" >
+	/** 考勤奖罚设置页面加载 */
+	$(function() {
+		$.ajax({
+			url : "/pm/attendance/getAllAttendanceSet",
+			type : 'get',
+			dataType: 'json',
+			success: function(response) {
+				if(response === "FAIL"){
+					layer.alert('联系后台管理员！', {icon: 2});
+				} else {
+					document.getElementById("latecome").value = response.setlatecome;
+					document.getElementById("earlyleave").value = response.setearlyleave;
+					document.getElementById("workovertime").value = response.setworkovertime;
+					document.getElementById("wovertime").value = response.setwovertime;
+					document.getElementById("hovertime").value = response.sethovertime;
+				}
+			},
+			error: function(response) {
+				alert('联系后台管理员！');
+			}
+		});
+
+	});
+	/** 考勤奖罚设置取消事件 */
+	$("#quitBtn").on("click",function() {
+		$.ajax({
+			url : "/pm/attendance/getAllAttendanceSet",
+			type : 'get',
+			dataType: 'json',
+			success: function(response) {
+				if(response === "FAIL"){
+					layer.alert('联系后台管理员！', {icon: 2});
+				} else {
+					document.getElementById("latecome").value = response.setlatecome;
+					document.getElementById("earlyleave").value = response.setearlyleave;
+					document.getElementById("workovertime").value = response.setworkovertime;
+					document.getElementById("wovertime").value = response.setwovertime;
+					document.getElementById("hovertime").value = response.sethovertime;
+				}
+			},
+			error: function(response) {
+				alert('联系后台管理员！');
+			}
+		});
+	});
+
+	/** 考勤奖罚设置修改事件 */
+	$(function() {
+		$("#editBtn").on("click",function() {
+			var latecome = $("#latecome");
+			var earlyleave = $("#earlyleave");
+			var workovertime = $("#workovertime");
+			var wovertime = $("#wovertime");
+			var hovertime = $("#hovertime");
+			$.ajax({
+				url : "/pm/attendance/updateAttendanceSet",
+				type : 'post',
+				data : {
+					setlatecome : latecome.val(),
+					setearlyleave : earlyleave.val(),
+					setworkovertime : workovertime.val(),
+					setwovertime : wovertime.val(),
+					sethovertime : hovertime.val(),
+					setid : "1"
+				},
+				dataType: 'json',
+				success: function(response) {
+					console.log(latecome);
+					console.log(response);
+					if(response === "SUCCESS"){
+						layer.alert('修改成功！', {icon: 1});
+						// 其他操作
+					} else {
+						layer.alert('修改有误！', {icon: 2});
+					}
+				},
+				error: function(response) {
+					console.log(response);
+					alert('联系后台管理员！');
+				}
+			});
+		});
+	})
+</script>
 </body>
 </html>

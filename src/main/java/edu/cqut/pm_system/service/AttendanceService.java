@@ -11,7 +11,6 @@ import edu.cqut.pm_system.entity.DeptSalary;
  * @date 2019/10/04
  */
 public interface AttendanceService {
-
     List<Attendance> getAllAttendance();
     String addAttendance(Attendance attendance);
     String updateAttendance(Integer ayear, Integer amonth, Integer alatecome, Integer aearlyleave, Integer workovertime, Integer aleave, Integer wovertime, Integer hovertime, String aid);
@@ -19,4 +18,6 @@ public interface AttendanceService {
     List<Attendance> searchAttendance(String uempid, String uempname, Integer ayear, Integer amonth);
     AttendanceSet getAllAttendanceSet();
     Double getEmpBasesalary(String aid);
+    String updateAttendanceSet(Double setlatecome,Double setearlyleave,Double setworkovertime,Double setwovertime,Double sethovertime,String setid);
+
 }

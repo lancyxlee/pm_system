@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.cqut.pm_system.dao.PerformanceDao">
+	<!--设置domain类和数据库中表的字段一一对应，注意数据库字段和domain类中的字段名称不致，此处一定要！-->
+	<resultMap id="PerformanceMap" type="edu.cqut.pm_system.entity.Performance">
+		<id column="pid" property="pid" jdbcType="VARCHAR" />
+		<result column="uid" property="uid" jdbcType="VARCHAR" />
+		<result column="pyear" property="pyear" jdbcType="INTEGER" />
+		<result column="pmonth" property="pmonth" jdbcType="INTEGER" />
+		<result column="performance" property="performance" jdbcType="DOUBLE" />
+		<result column="grade" property="grade" jdbcType="INTEGER" />
+		<result column="supv_rating" property="supv_rating" jdbcType="DOUBLE" />
+		<result column="self_rating" property="self_rating" jdbcType="DOUBLE" />
+		<result column="adst_rating" property="adst_rating" jdbcType="DOUBLE" />
+		<result column="bonusres" property="bonusres" jdbcType="DOUBLE" />
+	</resultMap>
+	<resultMap id="PerformanceSetMap" type="edu.cqut.pm_system.entity.PerformanceSet">
+		<id column="pset_id" property="pset_id" jdbcType="VARCHAR" />
+		<result column="grade" property="grade" jdbcType="INTEGER" />
+        <result column="bonus_set" property="bonus_set" jdbcType="DOUBLE" />
+	</resultMap>
+
+	<select id="getAllPerformanceSet" resultMap="PerformanceSetMap">
+		SELECT
+			performance_set.pset_id,
+			performance_set.grade,
+			performance_set.bonus_set
+		FROM
+			performance_set
+    </select>
+
+	<select id="getAllPerformance" resultMap="PerformanceMap">
+		SELECT
+			performance.pid,
+			performance.uid,
+			performance.pyear,
+			performance.pmonth,
+			performance.performance,
+			performance.grade,
+			performance.supv_rating,
+			performance.self_rating,
+			performance.adst_rating
+			performance.bonusres
+		FROM
+			perfomance
+    </select>
+
+	<update id="updatePerformanceSetFromId">
+		UPDATE performance_set
+		SET
+            performance_set.bonus_set = #{bonus_set}
+		WHERE
+			performance_set.pset_id = #{pset_id}
+	</update>
+
+</mapper>

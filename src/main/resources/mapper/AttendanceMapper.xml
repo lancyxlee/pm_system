@@ -62,6 +62,18 @@
 			attendance
     </select>
 
+	<update id="updateAttendanceSet">
+		UPDATE attendance_set
+		SET
+			setlatecome = #{setlatecome},
+			setearlyleave = #{setearlyleave},
+			setworkovertime = #{setworkovertime},
+			setwovertime=#{setwovertime},
+			sethovertime=#{sethovertime}
+		WHERE
+			attendance_set.setid = #{setid}
+	</update>
+
 	<update id="updateAttendance">
 		UPDATE attendance
 		<trim prefix="set" suffixOverrides=",">
