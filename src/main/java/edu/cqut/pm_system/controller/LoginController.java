@@ -5,9 +5,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Enumeration;
-
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import edu.cqut.pm_system.entity.User;
@@ -38,19 +37,19 @@ public class LoginController {
         }
     }
 
-    //    @RequestMapping(value = "loginOut", method = RequestMethod.POST)
-//    public String loginOut(HttpServletRequest request) {
-//        try {
-//            Enumeration em = request.getSession().getAttributeNames();
-//            while (em.hasMoreElements()) {
-//                request.getSession().removeAttribute(em.nextElement().toString());
-//            }
-//            return JacksonUtil.objectToJson("SUCCESS");
-//        } catch (Exception e) {
-//            return JacksonUtil.objectToJson("FAIL");
-//        }
-//    }
-//
+    @RequestMapping(value = "loginOut", method = RequestMethod.POST)
+    public String loginOut(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            request.getSession().removeAttribute("loginId");//清空session信息
+            request.getSession().removeAttribute("loginName");//清空session信息
+            request.getSession().removeAttribute("status");//清空session信息
+            request.getSession().invalidate();//清除 session 中的所有信息
+            return JacksonUtil.objectToJson("SUCCESS");
+        } catch (Exception e) {
+            return JacksonUtil.objectToJson("FAIL");
+        }
+    }
+
     @RequestMapping(value = "getPermission", method = RequestMethod.GET)
     public String getPermission(HttpSession session) {
         return JacksonUtil.objectToJson(session.getAttribute("status"));

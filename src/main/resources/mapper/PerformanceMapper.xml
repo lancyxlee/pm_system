@@ -121,6 +121,15 @@
 			performance_set.grade = #{grade}
     </select>
 
+	<select id="getMouthGrade" resultType="java.lang.Double">
+		SELECT
+			AVG (performance.performance) performance
+		FROM
+			performance
+		WHERE
+			performance.uid = #{uid} AND performance.pmonth = #{pmonth}
+    </select>
+
 	<insert id="addPerformance" parameterType="edu.cqut.pm_system.entity.Performance">
         INSERT INTO performance
         VALUES

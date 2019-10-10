@@ -12,8 +12,10 @@ import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -137,6 +139,32 @@ public class PerformanceController {
         Map<String, Object> result = performanceService.getPlanFromId(wid);
         if (result != null) {
             return JacksonUtil.objectToJson(result);
+        } else {
+            return "FAIL";
+        }
+    }
+
+    @RequestMapping(value = "getMouthGrade", method = RequestMethod.GET)
+    public String getMouthGrade(HttpSession httpSession) {
+        List<String> month = new ArrayList<>();
+        month.add("一月");
+        month.add("二月");
+        month.add("三月");
+        month.add("四月");
+        month.add("五月");
+        month.add("六月");
+        month.add("七月");
+        month.add("八月");
+        month.add("九月");
+        month.add("十月");
+        month.add("十一月");
+        month.add("十二月");
+        List<Double> result = performanceService.getMouthGrade((String) httpSession.getAttribute("loginId"));
+        Map<String, List> map = new HashMap<>();
+        map.put("name", month);
+        map.put("grade", result);
+        if (result != null) {
+            return JacksonUtil.objectToJson(map);
         } else {
             return "FAIL";
         }

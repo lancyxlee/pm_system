@@ -22,9 +22,6 @@ public class LoginInterceptor implements HandlerInterceptor {
         if (session.getAttribute("loginName") == null) {
             //判断session中有没有user信息
             //System.out.println("进入拦截器");
-            if ("XMLHttpRequest".equalsIgnoreCase(request.getHeader("X-Requested-With"))) {
-                response.sendError(401);
-            }
             // 此处应该添加上server.servlet.context-path在你需要调用的页面前。
             // 防止重定向和拦截器现成的死循环
             response.sendRedirect("/pm/login.html");

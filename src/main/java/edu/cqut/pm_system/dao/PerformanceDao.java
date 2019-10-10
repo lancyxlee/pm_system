@@ -40,4 +40,5 @@ public interface PerformanceDao {
 
     Double getBounsSet(Integer grade);
 
+    Double getMouthGrade(String uid, Integer pmonth);
 }

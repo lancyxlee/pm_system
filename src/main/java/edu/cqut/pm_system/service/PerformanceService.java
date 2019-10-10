@@ -33,4 +33,6 @@ public interface PerformanceService {
     String updatePerformance(Performance performance);
 
     String updateWorkplan(Workplan workplan);
+
+    List<Double> getMouthGrade(String uid);
 }

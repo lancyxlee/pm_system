@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -148,5 +150,26 @@ public class PerformanceServiceImpl implements PerformanceService {
             System.out.println(e);
             return "FAIL";
         }
+    }
+
+    @Override
+    public List<Double> getMouthGrade(String uid) {
+        List<Double> list = new ArrayList<>();
+        for (int i = 1; i <= 12; i++) {
+            Double result;
+            try {
+                result = performanceDao.getMouthGrade(uid, i);
+            } catch (Exception e) {
+                System.out.println(e);
+                return null;
+            }
+            if (result == null) list.add(0.0);
+            else {
+                BigDecimal bigDecimal = new BigDecimal(result).setScale(2, RoundingMode.HALF_UP);
+                result = bigDecimal.doubleValue();
+                list.add(result);
+            }
+        }
+        return list;
     }
 }
