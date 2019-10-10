@@ -28,10 +28,9 @@
     <!--搜索区域-->
     <div style="text-align: left; padding: 20px 30px 0 30px">
         <span style="font-size: 14px;">任务名称：</span><input type="text" class="search_bar" id="taskName" placeholder="请输入任务名称" name="taskName">
-        <span style="margin-left: 10px;font-size: 14px;">任务类型：</span><input type="text" class="search_bar" id="type" placeholder="请输入部门名称" name="type">
+        <span style="margin-left: 10px;font-size: 14px;">部门名称：</span><input type="text" class="search_bar" id="deptName" placeholder="请输入部门名称" name="type">
         <input id="search" class="search_btn" style="background-color: #2B7FDE; margin-left: 15px" type="button" value="查询"/>
         <input id="add" class="search_btn" style="background-color: #2B7FDE;float: right;" type="button" value="新增"/>
-        <input id="delete" class="search_btn" style="background-color: #DE2B2B;float: right; margin-right: 30px" type="button" value="删除"/>
     </div>
     <!--表单区域-->
     <div style="height: 4px; background-color: #2B7FDE; margin: 20px 30px -10px 30px;"></div>
@@ -46,66 +45,162 @@
     <a lay-event="del" style="color: #DE2B2B; font-size: 14px">删除</a>
 </script>
 <script>
-    layui.use('table', function () {
-        var table = layui.table;
-        //第一个实例
-        table.render({
-            elem: '#task_table'
-            , url: '/pm/employee/getAllEmployee' //数据接口
-            , method: 'get'
-            , height: 'full-180'
-            , page: {theme:'#2B7FDE'} //开启分页
-            , parseData:function(res) {
+    var type;
+    $(function() {
+        $.ajax({
+            url: "/pm/getPermission",
+            type: "get",
+            async: false,//使用同步的方式,true为异步方式
+            error: function (res) {
                 console.log(res);
-                return {
-                    "code": 0,
-                    "msg": "",
-                    "count": 100,
-                    "data":res
-                }
+                layer.alert('权限认证有误', {icon: 2});
+            },
+            success: function (res) {
+                type = eval(res);
             }
-            , cols: [[ //表头
-                {type: 'checkbox'}
-                , {type: 'numbers', title: '序号', align: 'center'}
-                , {field: 'uempid', title: '员工工号', align: 'center'}
-                , {field: 'uempname', title: '员工姓名', align: 'center'}
-                , {field: 'name', title: '任务名称', align: 'center'}
-                , {field: 'detail', title: '任务详情', align: 'center'}
-                , {field: 'type', title: '任务类型', align: 'center'}
-                , {field: 'createtime', title: '创建时间', sort: true, align: 'center',templet : "<div>{{layui.util.toDateString(d.ordertime, 'yyyy年MM月dd日')}}</div>"}
-                , {field: 'deadline', title: '完成期限', sort: true, align: 'center', templet : "<div>{{layui.util.toDateString(d.ordertime, 'yyyy年MM月dd日')}}</div>"}
-                , {field: 'status', title: '状态', align: 'center'}
-                , {fixed: 'right', title:'操作', toolbar: '#barDemo', align: 'center'}
-            ]]
         });
-        //监听行工具事件
-        table.on('tool(test)', function(obj){
-            var data = obj.data;
-            //console.log(obj)
-            if(obj.event === 'del'){
-                //询问框
-                layer.confirm('是否确实删除？'
-                    , {btn: ['确定','取消'], icon: 0
-                    }, function(){
-                        layer.msg('删除成功', {icon: 1});
-                    }, function(){
-
-                    });
-            } else if(obj.event === 'edit'){
-                layer.ready(function(){
-                    layer.open({
-                        type: 2,
-                        title: '编辑',
-                        shadeClose: true,
-                        area: ['500px', '550px'],
-                        content: 'staff_iframe.html?type=2',//type=2 修改操作
-                        end: function(){
-                            //layer.tips('Hi', '#about', {tips: 1})
+    });
+    $(function() {
+        if (type === 0 || type === 1) {
+            layui.use('table', function () {
+                var table = layui.table;
+                //第一个实例
+                table.render({
+                    elem: '#task_table'
+                    , url: '/pm/task/getAllTask' //数据接口
+                    , method: 'get'
+                    , height: 'full-180'
+                    , page: {theme:'#2B7FDE'} //开启分页
+                    , parseData:function(res) {
+                        console.log(res);
+                        return {
+                            "code": 0,
+                            "msg": "",
+                            "count": res.length,
+                            "data":res
                         }
-                    });
+                    }
+                    , cols: [[ //表头
+                        {type: 'numbers', title: '序号', align: 'center'}
+                        , {field: 'name', title: '任务名称', align: 'center'}
+                        , {field: 'detail', title: '任务详情', align: 'center'}
+                        , {field: 'did', title: '部门编号', align: 'center'}
+                        , {field: 'createtime', title: '创建时间', align: 'center',
+                            templet :function (row){
+                                var time = new Date(row.createtime);
+                                var day = time.getDate();
+                                if (time.getDate() < 10)
+                                    day = "0" + time.getDate();
+                                return time.getFullYear() + "-" + (time.getMonth() + 1) + "-" + day;
+                            }}
+                        , {field: 'deadline', title: '完成期限', sort: true, align: 'center',
+                            templet :function (row){
+                                var time = new Date(row.deadline);
+                                var day = time.getDate();
+                                if (time.getDate() < 10)
+                                    day = "0" + time.getDate();
+                                return time.getFullYear() + "-" + (time.getMonth() + 1) + "-" + day;
+                            }}
+                        , {field: 'status', title: '状态', sort: true, align: 'center', templet: function(row){if(row.status === 0){return '未完成'} else { return '已完成'}}}
+                        , {fixed: 'right', title:'操作', toolbar: '#barDemo', align: 'center'}
+                    ]]
                 });
-            }
-        });
+                //监听行工具事件
+                table.on('tool(test)', function(obj){
+                    var data = obj.data;
+                    //console.log(obj)
+                    if(obj.event === 'del'){
+                        //询问框
+                        layer.confirm('是否确实删除？'
+                            , {btn: ['确定','取消'], icon: 0
+                            }, function(){
+                                //确定按钮事件
+                                $.ajax({
+                                    type:"delete",
+                                    url:"/pm/task/deleteTask",
+                                    data : {
+                                        tid : obj.data.tid
+                                    },
+                                    datatype: "json",
+                                    error: function(){
+                                        //请求出错处理
+                                        layer.alert('出错了，请与管理员联系！', {icon: 2});
+                                    },
+                                    success:function(res){
+                                        if (res === "FAIL") {
+                                            parent.layer.alert('删除失败', {icon: 2});
+                                            layer.close(parent.layer.getFrameIndex(window.name));
+                                        } else {
+                                            layer.alert('删除成功', {icon: 1});
+                                            layui.table.reload('task_table', {
+                                                url: '/pm/task/getAllTask'
+                                            });
+                                            layer.close(parent.layer.getFrameIndex(window.name));
+                                        }
+                                    }
+                                });
+                            }, function(){
+
+                            });
+                    } else if(obj.event === 'edit'){
+                        layer.ready(function(){
+                            layer.open({
+                                type: 2,
+                                title: '编辑',
+                                shadeClose: true,
+                                area: ['500px', '550px'],
+                                content: 'task_iframe.html?type=2&tid=' + data.tid
+                            });
+                        });
+                    }
+                });
+            });
+        } else {
+            $("#add").remove();
+            layui.use('table', function () {
+                var table = layui.table;
+                //第一个实例
+                table.render({
+                    elem: '#task_table'
+                    , url: '/pm/task/getAllTask' //数据接口
+                    , method: 'get'
+                    , height: 'full-180'
+                    , page: {theme:'#2B7FDE'} //开启分页
+                    , parseData:function(res) {
+                        console.log(res);
+                        return {
+                            "code": 0,
+                            "msg": "",
+                            "count": res.length,
+                            "data":res
+                        }
+                    }
+                    , cols: [[ //表头
+                        {type: 'numbers', title: '序号', align: 'center'}
+                        , {field: 'name', title: '任务名称', align: 'center'}
+                        , {field: 'detail', title: '任务详情', align: 'center'}
+                        , {field: 'did', title: '部门编号', align: 'center'}
+                        , {field: 'createtime', title: '创建时间', align: 'center',
+                            templet :function (row){
+                                var time = new Date(row.createtime);
+                                var day = time.getDate();
+                                if (time.getDate() < 10)
+                                    day = "0" + time.getDate();
+                                return time.getFullYear() + "-" + (time.getMonth() + 1) + "-" + day;
+                            }}
+                        , {field: 'deadline', title: '完成期限', sort: true, align: 'center',
+                            templet :function (row){
+                                var time = new Date(row.deadline);
+                                var day = time.getDate();
+                                if (time.getDate() < 10)
+                                    day = "0" + time.getDate();
+                                return time.getFullYear() + "-" + (time.getMonth() + 1) + "-" + day;
+                            }}
+                        , {field: 'status', title: '状态', sort: true, align: 'center', templet: function(row){if(row.status === 0){return '未完成'} else { return '已完成'}}}
+                    ]]
+                });
+            });
+        }
     });
     $("#add").click(function(){
         layer.ready(function(){
@@ -114,11 +209,20 @@
                 title: '新增',
                 shadeClose: true,
                 area: ['500px', '550px'],
-                content: 'staff_iframe.html?type=1',//type=1 新增操作
-                end: function(){
-                    //layer.tips('Hi', '#about', {tips: 1})
-                }
+                content: 'task_iframe.html?type=1'//type=1 新增操作
             });
+        });
+    });
+    // 查询按钮事件
+    $("#search").click(function(){
+        var taskName = $("#taskName").val();
+        var deptName = $("#deptName").val();
+        layui.table.reload('task_table', {
+            url: '/pm/task/searchTask'
+            ,where: {
+                name: taskName
+                ,deptname: deptName
+            }
         });
     });
 </script>

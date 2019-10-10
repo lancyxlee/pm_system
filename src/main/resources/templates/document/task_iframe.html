@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>员工信息管理弹出页</title>
+    <link href="../layui/css/layui.css" rel="stylesheet" media="all">
+    <link href="../css/theme.css" rel="stylesheet">
+</head>
+<body style="padding: 30px 50px 30px 30px">
+<form class="layui-form" action="">
+    <div class="layui-form-item">
+        <label class="layui-form-label">任务名称</label>
+        <div class="layui-input-block">
+            <input type="text" name="name" required lay-verify="required" placeholder="请输入任务名称"
+                   autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label">任务详情</label>
+        <div class="layui-input-block">
+            <textarea name="detail" placeholder="请输入任务详情" class="layui-textarea"></textarea>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">部门名称</label>
+        <div class="layui-input-block">
+            <select id="dept_list" name="did" lay-verify="required">
+                <option value=""></option>
+            </select>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">完成时间</label>
+        <div class="layui-inline">
+            <input type="text" name="deadline" class="layui-input test-item" placeholder="请选择完成时间" id="entry_time">
+        </div>
+    </div>
+    <div id="status" class="layui-form-item">
+        <label class="layui-form-label">完成状态</label>
+        <div class="layui-input-block">
+            <input type="radio" name="status" value="0" title="未完成" checked>
+            <input type="radio" name="status" value="1" title="已完成">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit lay-filter="formDemo">提交</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+    </div>
+</form>
+<script src="../js/jquery-3.4.1.js"></script>
+<script src="../layer/layer.js"></script>
+<script src="../layui/layui.js"></script>
+<script>
+    var type;
+    var id;
+    $(function(){
+        parent.layer.iframeAuto(parent.layer.getFrameIndex(window.name));
+        var url = location.search; //这一条语句获取了包括问号开始到参数的最后，不包括前面的路径
+        console.log(url);
+        var params = url.substr(1);//去掉问号
+        var pa = params.split("&");
+        var s = {};
+        for(var i = 0; i < pa.length; i ++){
+            s[pa[i].split("=")[0]] = unescape(pa[i].split("=")[1]);
+        }
+        type = s.type + "";
+        id = s.tid + "";
+        $.ajax({
+            url: "/pm/employee/getAllDept",
+            type: "get",
+            dataType: "json",
+            error: function () {
+                layer.alert('出错了，请与管理员联系！', {icon: 2});
+            },
+            success: function (res) {
+                console.log(res);
+                $.each(res, function (index, item) {
+                    $('#dept_list').append(new Option(item.deptname, item.did));// 下拉菜单里添加元素
+                });
+                layui.form.render('select');
+            }
+        });
+        if(type === "1") {
+            $("#status").remove();
+            parent.layer.iframeAuto(parent.layer.getFrameIndex(window.name));
+        } else if (type === "2") {
+            $.ajax({
+                type: "get",
+                url: "/pm/task/getTaskFromId",
+                data : {
+                    tid : id
+                },
+                dataType: "json",
+                error: function () {
+                    layer.alert('出错了，请与管理员联系！', {icon: 2});
+                },
+                success: function (res) {
+                    console.log(res);
+                    $("input[name='name']").attr('value',res.name);
+                    $("textarea[name='detail']").val(res.detail);
+                    $("#dept_list").val(res.did);
+                    var time = new Date(res.deadline);
+                    var day = time.getDate();
+                    if (time.getDate() < 10)
+                        day = "0" + time.getDate();
+                    var deadline = time.getFullYear() + "-" + (time.getMonth() + 1) + "-" + day;
+                    $("input[name='deadline']").attr('value', deadline);
+                    $("input:radio[name='status'][value='" + res.status + "']").attr('checked','true');
+                }
+            });
+        }
+    });
+
+    layui.use('form', function () {
+        var form = layui.form;
+        //监听提交
+        form.on('submit(formDemo)', function (data) {
+            if (type === "1") {
+                $.ajax({
+                    type:"post",
+                    url:"/pm/task/addTask",
+                    data : {
+                        name : data.field.name,
+                        detail : data.field.detail,
+                        did : data.field.did,
+                        deadline : data.field.deadline
+                    },
+                    datatype: "json",
+                    error: function(){
+                        //请求出错处理
+                        layer.alert('出错了，请与管理员联系！', {icon: 2});
+                    },
+                    success:function(res){
+                        if (res === "FAIL") {
+                            parent.layer.alert('新增失败', {icon: 2});
+                            parent.layer.close(parent.layer.getFrameIndex(window.name));
+                        } else {
+                            parent.layer.alert('新增成功', {icon: 1});
+                            parent.layui.table.reload('task_table', {
+                                url: '/pm/task/getAllTask'
+                            });
+                            parent.layer.close(parent.layer.getFrameIndex(window.name));
+
+                        }
+                    }
+                });
+            } else {
+                $.ajax({
+                    type:"post",
+                    url:"/pm/task/updateTask",
+                    data : {
+                        name : data.field.name,
+                        detail : data.field.detail,
+                        did : data.field.did,
+                        deadline : data.field.deadline,
+                        status : data.field.status,
+                        tid : id
+                    },
+                    datatype: "json",
+                    error: function(){
+                        //请求出错处理
+                        layer.alert('出错了，请与管理员联系！', {icon: 2});
+                    },
+                    success:function(res){
+                        if (res === "FAIL") {
+                            parent.layer.alert('编辑失败', {icon: 2});
+                            parent.layer.close(parent.layer.getFrameIndex(window.name));
+                        } else {
+                            parent.layer.alert('编辑成功', {icon: 1});
+                            parent.layui.table.reload('task_table', {
+                                url: '/pm/task/getAllTask'
+                            });
+                            parent.layer.close(parent.layer.getFrameIndex(window.name));
+                        }
+                    }
+                });
+            }
+            return false;
+        });
+    });
+    layui.use('laydate', function(){
+        var laydate = layui.laydate;
+        //执行一个laydate实例
+        laydate.render({
+            elem: '#entry_time' //指定元素
+            ,theme: '#2B7FDE'
+            ,trigger: 'click'
+        });
+    });
+</script>
+</body>
+</html>

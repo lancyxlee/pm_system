@@ -22,7 +22,7 @@ import edu.cqut.pm_system.util.JacksonUtil;
 import edu.cqut.pm_system.util.MD5Util;
 
 /**
- * 登录界面Controller层
+ * 部门管理Controller层
  * @author llx
  * @date 2019/09/28
  */

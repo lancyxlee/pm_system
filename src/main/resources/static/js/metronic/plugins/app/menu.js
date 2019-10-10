@@ -62,7 +62,7 @@ function loadMenu() {
         }
     });
 
-    if (permission == 0) {
+    if (permission === 0) {
         // jquery的方法
         var jsonObj = $.parseJSON(json);
     } else {

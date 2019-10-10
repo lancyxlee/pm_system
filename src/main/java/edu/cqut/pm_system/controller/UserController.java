@@ -15,7 +15,7 @@ import edu.cqut.pm_system.service.UserService;
 import edu.cqut.pm_system.util.JacksonUtil;
 
 /**
- * 登录界面Controller层
+ * 用户管理界面Controller层
  * @author llx
  * @date 2019/09/28
  */

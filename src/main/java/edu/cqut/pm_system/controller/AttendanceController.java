@@ -19,7 +19,7 @@ import edu.cqut.pm_system.util.EntityIDFactory;
 import edu.cqut.pm_system.util.JacksonUtil;
 
 /**
- * 登录界面Controller层
+ * 考勤界面Controller层
  *
  * @author llx
  * @date 2019/09/28
