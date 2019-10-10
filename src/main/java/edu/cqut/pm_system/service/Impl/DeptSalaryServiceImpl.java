@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 import edu.cqut.pm_system.dao.DeptSalaryDao;
 import edu.cqut.pm_system.dao.PersonnelDao;
@@ -48,6 +49,16 @@ public class DeptSalaryServiceImpl implements DeptSalaryService {
     @Override
     public List<DeptSalary> searchDeptSalary(Integer role, String deptname) {
         return deptSalaryDao.searchDeptSalary(role, deptname);
+    }
+
+    @Override
+    public List<Map<String, Object>> getAllEmpSalary() {
+        return deptSalaryDao.getAllEmpSalary();
+    }
+
+    @Override
+    public List<Map<String, Object>> searchEmpSalary(String uempid, String uempname, Integer year, Integer month) {
+        return deptSalaryDao.searchEmpSalary(uempid,uempname,year,month);
     }
 
 

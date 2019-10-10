@@ -10,6 +10,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Map;
 
 import edu.cqut.pm_system.entity.Dept;
 import edu.cqut.pm_system.entity.DeptSalary;
@@ -64,5 +65,21 @@ public class DeptSalaryController {
         } else {
             return "FAIL";
         }
+    }
+
+    @RequestMapping(value = "getAllEmpSalary", method = RequestMethod.GET)
+    public String getAllEmpSalary() {
+        List<Map<String, Object>> result = deptSalaryService.getAllEmpSalary();
+        if (result != null) {
+            return JacksonUtil.objectToJson(result);
+        } else {
+            return "FAIL";
+        }
+    }
+
+    @RequestMapping(value = "searchEmpSalary", method = RequestMethod.GET)
+    public String searchEmpSalary(String uempid, String uempname, Integer year, Integer month) {
+        List<Map<String, Object>> empSalary = deptSalaryService.searchEmpSalary(uempid, uempname, year, month);
+        return JacksonUtil.objectToJson(empSalary);
     }
 }

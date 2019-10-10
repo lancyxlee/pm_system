@@ -3,6 +3,29 @@
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="edu.cqut.pm_system.dao.DeptSalaryDao">
 	<!--设置domain类和数据库中表的字段一一对应，注意数据库字段和domain类中的字段名称不致，此处一定要！-->
+	<resultMap id="EmpSalaryMap" type="edu.cqut.pm_system.entity.Salary">
+		<id column="id" property="id" jdbcType="VARCHAR" />
+		<result column="uid" property="uid" jdbcType="VARCHAR" />
+		<result column="basesalary" property="basesalary" jdbcType="DOUBLE" />
+		<result column="finalsalary" property="finalsalary" jdbcType="DOUBLE" />
+		<result column="year" property="year" jdbcType="INTEGER" />
+		<result column="month" property="month" jdbcType="INTEGER" />
+		<result column="attendance" property="attendance" jdbcType="DOUBLE" />
+		<result column="kpi" property="kpi" jdbcType="DOUBLE" />
+	</resultMap>
+
+	<resultMap id="EmployeeMap" type="edu.cqut.pm_system.entity.Employee">
+		<id column="uid" property="uid" jdbcType="VARCHAR" />
+		<result column="uempid" property="uempid" jdbcType="VARCHAR" />
+		<result column="uempname" property="uempname" jdbcType="VARCHAR" />
+		<result column="age" property="age" jdbcType="INTEGER" />
+		<result column="sex" property="sex" jdbcType="INTEGER" />
+		<result column="idnum" property="idnum" jdbcType="VARCHAR" />
+		<result column="telnum" property="telnum" jdbcType="VARCHAR" />
+		<result column="startdate" property="startdate" jdbcType="TIMESTAMP" />
+		<result column="deptnum" property="deptnum" jdbcType="VARCHAR" />
+	</resultMap>
+
 	<resultMap id="DeptSalaryMap" type="edu.cqut.pm_system.entity.DeptSalary">
 		<id column="salarysetid" property="salarysetid" jdbcType="VARCHAR" />
 		<result column="deptnum" property="deptnum" jdbcType="VARCHAR" />
@@ -15,6 +38,25 @@
 		<result column="deptnum" property="deptnum" jdbcType="VARCHAR" />
 		<result column="tel" property="tel" jdbcType="VARCHAR" />
 	</resultMap>
+
+	<select id="getAllEmpSalary" resultType="java.util.HashMap">
+		SELECT
+			salary.uid,
+			salary.basesalary,
+			salary.finalsalary,
+			salary.year,
+			salary.month,
+			salary.attendance,
+			salary.kpi,
+			dept.deptname,
+			employee.uempname
+		FROM
+			salary, dept,employee
+		WHERE
+			salary.uid = employee.uid
+		AND
+			dept.did = employee.deptnum
+    </select>
 
 	<select id="getAllDeptSalary" resultMap="DeptSalaryMap">
 		SELECT
@@ -67,4 +109,42 @@
 		WHERE
 			salary_set.deptnum = #{deptnum}
 	</delete>
+
+	<delete id="deleteSalary">
+		DELETE
+		FROM
+			salary
+		WHERE
+			salary.uid = #{uid}
+	</delete>
+
+	<select id="searchEmpSalary" resultType="java.util.HashMap">
+		SELECT
+		salary.uid,
+		salary.basesalary,
+		salary.finalsalary,
+		salary.year,
+		salary.month,
+		salary.attendance,
+		salary.kpi,
+		dept.deptname,
+		employee.uempname
+		FROM
+		salary, dept,employee
+		WHERE
+		1 = 1
+		<if test="uempid != null and uempid != ''">
+			AND employee.uempid like CONCAT('%',#{uempid},'%')
+		</if>
+		<if test="uempname != null and uempname != ''">
+			AND employee.uempname like CONCAT('%',#{uempname},'%')
+		</if>
+		<if test="year != null">
+			AND salary.year = #{year}
+		</if>
+		<if test="month != null">
+			AND salary.month = #{month}
+		</if>
+	</select>
+
 </mapper>

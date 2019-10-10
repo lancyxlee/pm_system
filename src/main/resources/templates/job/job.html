@@ -47,23 +47,48 @@
 		//第一个实例
 		table.render({
 			elem: '#salay_table'
-			, url: '/demo/table/user/' //数据接口
+			, url: '/pm/deptSalary/getAllEmpSalary' //数据接口
 			, height: 'full-180'
 			, page: {theme:'#2B7FDE'}//开启分页
+			, parseData:function(res) {
+				return {
+					"code": 0,
+					"msg": "",
+					"count": res.length,
+					"data":res
+				}
+			}
 			, cols: [[ //表头
-				{type: 'checkbox'}
-				, {field: 'id', title: '序号', sort: true, fixed: 'left'}
-				, {field: 'empId', title: '员工工号'}
-				, {field: 'empName', title: '员工姓名'}
-				, {field: 'dept', title: '所属部门'}
+				{type: 'numbers', title: '序号', align:'center', fixed: 'left'}
+				, {field: 'uid', title: '员工工号'}
+				, {field: 'uempname', title: '员工姓名'}
+				, {field: 'deptname', title: '所属部门'}
 				, {field: 'year', title: '年份', sort: true}
 				, {field: 'month', title: '月份', sort: true}
-				, {field: 'baseSalary', title: '基本工资(元/月)'}
-				, {field: 'finalSalary', title: '最终工资'}
-				, {field: 'a', title: '考勤奖罚'}
-				, {field: 'p', title: '绩效奖罚'}
-				, {fixed: 'right', title:'操作', align:'center', toolbar: '#barDemo'}
+				, {field: 'basesalary', title: '基本工资(元/月)'}
+				, {field: 'finalsalary', title: '最终工资'}
+				, {field: 'attendance', title: '考勤奖罚'}
+				, {field: 'kpi', title: '绩效奖罚'}
 			]]
+		});
+	});
+
+	// 查询按钮事件
+	$("#search").click(function(){
+		var empId = $("#empId").val();
+		var empName = $("#empName").val();
+		var year = $("#year").val();
+		var month = $("#month").val();
+		layui.table.reload('salay_table', {
+			url: '/pm/deptSalary/searchEmpSalary'
+			,where: {
+				uempid: empId,
+				uempname: empName,
+				year:year,
+				month:month
+			}, page: {
+				curr: 1 //重新从第 1 页开始
+			}
 		});
 	});
 </script>
