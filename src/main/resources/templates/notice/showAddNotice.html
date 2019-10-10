@@ -29,8 +29,8 @@
 	<div style="text-align: left; padding: 20px 30px 0 30px">
 		员工工号：<input type="text" class="search_bar" id="empId" placeholder="请输入员工工号"  name="empId" />
 		<span style="margin-left: 10px">员工姓名：</span><input type="text" class="search_bar" id="empName" placeholder="请输入员工姓名" name="empName" />
-		<span style="margin-left: 10px">年份：</span><input type="text" class="search_bar" id="year" placeholder="请输入年份" name="year" style="width: 80px"/>
-		<span style="margin-left: 10px">月份：</span><input type="text" class="search_bar" id="month" placeholder="请输入月份" name="month" style="width: 80px"/>
+		<span style="margin-left: 10px">年份：</span><input type="text" class="search_bar" id="pyear" placeholder="请输入年份" name="year" style="width: 80px"/>
+		<span style="margin-left: 10px">月份：</span><input type="text" class="search_bar" id="pmonth" placeholder="请输入月份" name="month" style="width: 80px"/>
 		<input id="search" class="search_btn" style="background-color: #2B7FDE; margin-left: 15px;font-size: 14px" type="button" value="查询"/>
 	</div>
 	<!--表单区域-->
@@ -47,26 +47,52 @@
 		//第一个实例
 		table.render({
 			elem: '#performance_table'
-			, url: '/demo/table/user/' //数据接口
+			, url: '/pm/performance/getAllPerformance' //数据接口
 			, height: 'full-180'
 			, page: true //开启分页
+			, parseData:function(res) {
+				return {
+					"code": 0,
+					"msg": "",
+					"count": res.length,
+					"data":res
+				}
+			}
 			, cols: [[ //表头
-				{type: 'checkbox'}
-				, {field: 'id', title: '序号', sort: true, fixed: 'left'}
-				, {field: 'empId', title: '员工工号'}
-				, {field: 'empName', title: '员工姓名'}
-				, {field: 'year', title: '年份', sort: true}
-				, {field: 'month', title: '月份', sort: true}
+				{type: 'numbers', title: '序号', align:'center', fixed: 'left'}
+				, {field: 'uid', title: '员工工号'}
+				, {field: 'uempname', title: '员工姓名'}
+				, {field: 'pyear', title: '年份', sort: true}
+				, {field: 'pmonth', title: '月份', sort: true}
 				, {field: 'self_rating', title: '自评分'}
 				, {field: 'supv_rating', title: '主管评分'}
 				, {field: 'adst_rating', title: '管理员评分'}
 				, {field: 'performance', title: '绩效总分'}
 				, {field: 'grade', title: '绩效等级'}
 				, {field: 'bonusres', title: '绩效奖罚'}
-				, {fixed: 'right', title:'操作', align:'center', toolbar: '#barDemo'}
 			]]
 		});
 	});
+
+	// 查询按钮事件
+	$("#search").click(function(){
+		var empId = $("#empId").val();
+		var empName = $("#empName").val();
+		var year = $("#pyear").val();
+		var month = $("#pmonth").val();
+		layui.table.reload('performance_table', {
+			url: '/pm/performance/searchPerformance'
+			,where: {
+				uempid: empId,
+				uempname: empName,
+				pyear:year,
+				pmonth:month
+			}, page: {
+				curr: 1 //重新从第 1 页开始
+			}
+		});
+	});
+
 </script>
 </body>
 </html>

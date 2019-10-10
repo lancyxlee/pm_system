@@ -40,4 +40,6 @@ public interface PerformanceDao {
 
     Double getBounsSet(Integer grade);
 
+    List<Map<String, Object>> searchPerformance(@Param("uempid")String uempid, @Param("uempname")String uempname, @Param("pyear")Integer pyear, @Param("pmonth")Integer pmonth);
+
 }

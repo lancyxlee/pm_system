@@ -33,4 +33,6 @@ public interface PerformanceService {
     String updatePerformance(Performance performance);
 
     String updateWorkplan(Workplan workplan);
+
+    List<Map<String, Object>> searchPerformance(String uempid, String uempname, Integer pyear, Integer pmonth);
 }

@@ -149,4 +149,14 @@ public class PerformanceServiceImpl implements PerformanceService {
             return "FAIL";
         }
     }
+
+    @Override
+    public List<Map<String, Object>> searchPerformance(String uempid, String uempname, Integer pyear, Integer pmonth) {
+        try {
+            return performanceDao.searchPerformance(uempid,uempname,pyear,pmonth);
+        } catch (Exception e) {
+            System.out.println(e);
+            return null;
+        }
+    }
 }
