@@ -208,4 +208,62 @@
 			AND performance.pmonth = #{pmonth}
 		</if>
 	</select>
+
+	<select id="getBaseSalary" resultType="java.lang.Double">
+		SELECT
+			salary_set.basesalary
+		FROM
+			salary_set,
+			dept,
+			employee,
+			`user`
+		WHERE
+			`user`.uid = #{uid}
+		AND employee.uid = #{uid}
+		AND dept.did = employee.deptnum
+		AND dept.did = salary_set.deptnum
+		AND `user`.role = salary_set.role
+	</select>
+	
+	<select id="getAttendance" resultType="java.lang.Double">
+		SELECT
+			attendance.bonusres
+		FROM
+			attendance
+		WHERE
+			attendance.uempid = #{uid}
+	</select>
+
+	<select id="getPyear" resultType="java.lang.Integer">
+		SELECT
+			performance.pyear
+		FROM
+			performance
+		WHERE
+			performance.uid = #{uid}
+	</select>
+
+	<select id="getPmonth" resultType="java.lang.Integer">
+		SELECT
+			performance.pmonth
+		FROM
+			performance
+		WHERE
+			performance.uid = #{uid}
+	</select>
+
+	<select id="getUid" resultType="java.lang.String">
+		SELECT
+			performance.uid
+		FROM
+			performance
+		WHERE
+			performance.pid = #{pid}
+	</select>
+
+	<insert id="addEmpSalary" parameterType="edu.cqut.pm_system.entity.Salary">
+        INSERT INTO salary
+        VALUES
+	    (#{id, jdbcType=VARCHAR}, #{uid, jdbcType=VARCHAR}, #{basesalary, jdbcType=DOUBLE}, #{finalsalary, jdbcType=DOUBLE}, #{year, jdbcType=INTEGER}, #{month, jdbcType=INTEGER}, #{attendance, jdbcType=DOUBLE}, #{kpi, jdbcType=DOUBLE})
+    </insert>
 </mapper>

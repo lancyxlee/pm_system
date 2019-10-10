@@ -8,6 +8,7 @@ import java.util.Map;
 
 import edu.cqut.pm_system.entity.Performance;
 import edu.cqut.pm_system.entity.PerformanceSet;
+import edu.cqut.pm_system.entity.Salary;
 import edu.cqut.pm_system.entity.Workplan;
 
 /**
@@ -43,4 +44,16 @@ public interface PerformanceDao {
     Double getMouthGrade(String uid, Integer pmonth);
 
     List<Map<String, Object>> searchPerformance(@Param("uempid")String uempid, @Param("uempname")String uempname, @Param("pyear")Integer pyear, @Param("pmonth")Integer pmonth);
+
+    Double getBaseSalary(String uid);
+
+    Double getAttendance(String uid);
+
+    Integer getPyear(String uid);
+
+    Integer getPmonth(String uid);
+
+    String getUid(String pid);
+
+    void addEmpSalary(Salary salary);
 }

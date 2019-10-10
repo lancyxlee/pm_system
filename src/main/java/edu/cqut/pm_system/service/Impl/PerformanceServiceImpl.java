@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,8 +14,10 @@ import java.util.Map;
 import edu.cqut.pm_system.dao.PerformanceDao;
 import edu.cqut.pm_system.entity.Performance;
 import edu.cqut.pm_system.entity.PerformanceSet;
+import edu.cqut.pm_system.entity.Salary;
 import edu.cqut.pm_system.entity.Workplan;
 import edu.cqut.pm_system.service.PerformanceService;
+import edu.cqut.pm_system.util.EntityIDFactory;
 
 /**
  * 绩效管理界面Service实现层
@@ -110,6 +113,7 @@ public class PerformanceServiceImpl implements PerformanceService {
 
     @Override
     public String updatePerformance(Performance performance) {
+        String uid = performanceDao.getUid(performance.getPid());
         if (performance.getAdst_rating() != null) {
             Double performanceValue = (performance.getSelf_rating() + performance.getAdst_rating() + performance.getSupv_rating()) / 3;
             //大于85小于100为绩效一等
@@ -128,7 +132,18 @@ public class PerformanceServiceImpl implements PerformanceService {
             BigDecimal bigDecimal = new BigDecimal(performanceValue).setScale(2, RoundingMode.HALF_UP);
             performanceValue = bigDecimal.doubleValue();
             performance.setPerformance(performanceValue);
-            performance.setBonusres(performanceDao.getBounsSet(performance.getGrade()));
+            Double grade = performanceDao.getBounsSet(performance.getGrade());
+            performance.setBonusres(performanceDao.getBaseSalary(uid) * grade);
+            Salary salary = new Salary();
+            salary.setId(EntityIDFactory.createId());
+            salary.setUid(uid);
+            salary.setBaseSalary(performanceDao.getBaseSalary(uid));
+            salary.setYear(performanceDao.getPyear(uid));
+            salary.setMonth(performanceDao.getPmonth(uid));
+            salary.setAttendence(performanceDao.getAttendance(uid));
+            salary.setKpi(performance.getBonusres());
+            salary.setFinalSalary(salary.getBaseSalary() + salary.getAttendence() + salary.getKpi());
+            performanceDao.addEmpSalary(salary);
         }
         try {
             performanceDao.updatePerformance(performance);
