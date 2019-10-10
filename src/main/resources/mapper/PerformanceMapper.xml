@@ -40,7 +40,7 @@
 			performance_set
     </select>
 
-	<select id="getAllPerformance" resultMap="PerformanceMap">
+	<select id="getAllPerformance" resultType="java.util.HashMap">
 		SELECT
 			performance.pid,
 			performance.uid,
@@ -50,10 +50,13 @@
 			performance.grade,
 			performance.supv_rating,
 			performance.self_rating,
-			performance.adst_rating
-			performance.bonusres
+			performance.adst_rating,
+			performance.bonusres,
+			employee.uempname
 		FROM
-			perfomance
+			performance,employee
+		WHERE
+			performance.uid = employee.uid
     </select>
 
 	<select id="getPlanFromId" resultType="java.util.HashMap">
@@ -174,4 +177,35 @@
 		WHERE
 			performance_set.pset_id = #{pset_id}
 	</update>
+
+	<select id="searchPerformance" resultType="java.util.HashMap">
+		SELECT
+			performance.pid,
+			performance.uid,
+			performance.pyear,
+			performance.pmonth,
+			performance.performance,
+			performance.grade,
+			performance.supv_rating,
+			performance.self_rating,
+			performance.adst_rating,
+			performance.bonusres,
+			employee.uempname
+		FROM
+			performance,employee
+		WHERE
+		1 = 1
+		<if test="uempid != null and uempid != ''">
+			AND employee.uempid like CONCAT('%',#{uempid},'%')
+		</if>
+		<if test="uempname != null and uempname != ''">
+			AND employee.uempname like CONCAT('%',#{uempname},'%')
+		</if>
+		<if test="pyear != null">
+			AND performance.pyear = #{pyear}
+		</if>
+		<if test="pmonth != null">
+			AND performance.pmonth = #{pmonth}
+		</if>
+	</select>
 </mapper>

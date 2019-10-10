@@ -35,4 +35,6 @@ public interface PerformanceService {
     String updateWorkplan(Workplan workplan);
 
     List<Double> getMouthGrade(String uid);
+
+    List<Map<String, Object>> searchPerformance(String uempid, String uempname, Integer pyear, Integer pmonth);
 }

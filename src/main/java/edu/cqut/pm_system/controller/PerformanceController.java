@@ -169,4 +169,10 @@ public class PerformanceController {
             return "FAIL";
         }
     }
+
+    @RequestMapping(value = "searchPerformance", method = RequestMethod.GET)
+    public String searchPerformance(String uempid, String uempname, Integer pyear, Integer pmonth) {
+        List<Map<String, Object>> performance = performanceService.searchPerformance(uempid,uempname,pyear,pmonth);
+        return JacksonUtil.objectToJson(performance);
+    }
 }
